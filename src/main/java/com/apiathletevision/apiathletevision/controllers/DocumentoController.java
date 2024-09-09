@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/documento")
+@RequestMapping("/api/documento")
 public class DocumentoController {
 
     @Autowired

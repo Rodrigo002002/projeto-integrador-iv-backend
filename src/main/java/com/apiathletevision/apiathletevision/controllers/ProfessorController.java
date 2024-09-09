@@ -1,50 +1,54 @@
 package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.ProfessorDTO;
-import com.apiathletevision.apiathletevision.entities.Professor;
 import com.apiathletevision.apiathletevision.services.ProfessorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/professor")
+@RequestMapping("/api/professor")
+@RequiredArgsConstructor
 public class ProfessorController {
 
-    @Autowired
-    private ProfessorService professorService;
+    private final ProfessorService professorService;
 
     @GetMapping
-    public ResponseEntity<List<Professor>> getAllProfessors() {
-        List<Professor> professors = professorService.getAllProfessors();
-        return ResponseEntity.ok(professors);
+    public ResponseEntity<List<ProfessorDTO>> getAllProfessors() {
+        List<ProfessorDTO> professores = professorService.getAllProfessors();
+        return new ResponseEntity<>(professores, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Professor> getProfessorById(@PathVariable UUID id) {
-        Optional<Professor> professor = professorService.getProfessorById(id);
-        return professor.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ProfessorDTO> getProfessorById(@PathVariable("id") UUID id) {
+        return professorService.getProfessorById(id)
+                .map(professor -> new ResponseEntity<>(professor, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
-    public ResponseEntity<Professor> createProfessor(@RequestBody ProfessorDTO professorDTO) {
-        Professor createdProfessor = professorService.createProfessor(professorDTO);
-        return ResponseEntity.ok(createdProfessor);
+    public ResponseEntity<ProfessorDTO> createProfessor(@RequestBody ProfessorDTO professorDTO) {
+        ProfessorDTO professor = professorService.createProfessor(professorDTO);
+        return new ResponseEntity<>(professor, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Professor> updateProfessor(@PathVariable UUID id, @RequestBody ProfessorDTO professorDTO) {
-        Professor updatedProfessor = professorService.updateProfessor(id, professorDTO);
-        return updatedProfessor != null ? ResponseEntity.ok(updatedProfessor) : ResponseEntity.notFound().build();
+    public ResponseEntity<ProfessorDTO> updateProfessor(@PathVariable("id") UUID id, @RequestBody ProfessorDTO professorDTO) {
+        ProfessorDTO professor = professorService.updateProfessor(id, professorDTO);
+
+        if (professor != null) {
+            return new ResponseEntity<>(professor, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProfessor(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteProfessor(@PathVariable("id") UUID id) {
         professorService.deleteProfessor(id);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

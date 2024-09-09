@@ -6,6 +6,7 @@ import com.apiathletevision.apiathletevision.entities.Aluno;
 import com.apiathletevision.apiathletevision.entities.Turma;
 import com.apiathletevision.apiathletevision.entities.Plano;
 import com.apiathletevision.apiathletevision.entities.Documento;
+import com.apiathletevision.apiathletevision.enums.UserRole;
 import com.apiathletevision.apiathletevision.repositories.AlunoRepository;
 import com.apiathletevision.apiathletevision.repositories.TurmaRepository;
 import com.apiathletevision.apiathletevision.repositories.PlanoRepository;
@@ -59,7 +60,7 @@ public class AlunoServiceTests {
         // Cria DTO do Aluno
         AlunoDTO alunoDTO = new AlunoDTO();
         alunoDTO.setNome("João");
-        alunoDTO.setTipo("Aluno");
+        alunoDTO.setRole(UserRole.ALUNO);
         alunoDTO.setTelefone("123456789");
         alunoDTO.setEmail("joao@example.com");
         alunoDTO.setDocumentosIds(List.of(1));

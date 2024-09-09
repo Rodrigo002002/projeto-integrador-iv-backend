@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/modalidade")
+@RequestMapping("/api/modalidade")
 public class ModalidadeController {
 
     @Autowired

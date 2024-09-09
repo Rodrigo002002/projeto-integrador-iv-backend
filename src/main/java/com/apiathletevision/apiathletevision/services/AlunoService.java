@@ -3,11 +3,11 @@ package com.apiathletevision.apiathletevision.services;
 import com.apiathletevision.apiathletevision.dtos.AlunoDTO;
 import com.apiathletevision.apiathletevision.entities.Aluno;
 import com.apiathletevision.apiathletevision.repositories.AlunoRepository;
-import com.apiathletevision.apiathletevision.repositories.TurmaRepository;
 import com.apiathletevision.apiathletevision.repositories.DocumentoRepository;
 import com.apiathletevision.apiathletevision.repositories.PlanoRepository;
+import com.apiathletevision.apiathletevision.repositories.TurmaRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,32 +16,30 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class AlunoService {
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private AlunoRepository alunoRepository;
+    private final AlunoRepository alunoRepository;
 
-    @Autowired
-    private TurmaRepository turmaRepository;
+    private final TurmaRepository turmaRepository;
 
-    @Autowired
-    private DocumentoRepository documentoRepository;
+    private final DocumentoRepository documentoRepository;
 
-    @Autowired
-    private PlanoRepository planoRepository;
+    private final PlanoRepository planoRepository;
 
-    public List<Aluno> getAllAlunos() {
-        return alunoRepository.findAll();
+    public List<AlunoDTO> getAllAlunos() {
+        return alunoRepository.findAll().stream().map(aluno -> modelMapper.map(aluno, AlunoDTO.class)).toList();
     }
 
-    public Optional<Aluno> getAlunoById(UUID id) {
-        return alunoRepository.findById(id);
+    public Optional<AlunoDTO> getAlunoById(UUID id) {
+        Optional<Aluno> aluno = alunoRepository.findById(id);
+        AlunoDTO alunoDTO = modelMapper.map(aluno, AlunoDTO.class);
+        return Optional.ofNullable(alunoDTO);
     }
 
-    public Aluno createAluno(AlunoDTO alunoDTO) {
+    public AlunoDTO createAluno(AlunoDTO alunoDTO) {
         Aluno aluno = new Aluno();
         String encryptedPassword = new BCryptPasswordEncoder().encode(alunoDTO.getPassword());
 
@@ -53,10 +51,12 @@ public class AlunoService {
         aluno.setTurma(alunoDTO.getTurmaId() == null ? null : turmaRepository.findById(alunoDTO.getTurmaId()).orElse(null));
         aluno.setDocumentos(documentoRepository.findAllById(alunoDTO.getDocumentosIds()));
         aluno.setPlano(alunoDTO.getPlanoId() == null ? null : planoRepository.findById(alunoDTO.getPlanoId()).orElse(null));
-        return alunoRepository.save(aluno);
+        aluno = alunoRepository.save(aluno);
+
+        return modelMapper.map(aluno, AlunoDTO.class);
     }
 
-    public Aluno updateAluno(UUID id, AlunoDTO alunoDTO) {
+    public AlunoDTO updateAluno(UUID id, AlunoDTO alunoDTO) {
         Optional<Aluno> optionalAluno = alunoRepository.findById(id);
         if (optionalAluno.isPresent()) {
             String encryptedPassword = new BCryptPasswordEncoder().encode(alunoDTO.getPassword());
@@ -70,7 +70,7 @@ public class AlunoService {
             aluno.setTurma(turmaRepository.findById(alunoDTO.getTurmaId()).orElse(null));
             aluno.setDocumentos(documentoRepository.findAllById(alunoDTO.getDocumentosIds()));
             aluno.setPlano(planoRepository.findById(alunoDTO.getPlanoId()).orElse(null));
-            return alunoRepository.save(aluno);
+            return modelMapper.map(aluno, AlunoDTO.class);
         }
         return null;
     }

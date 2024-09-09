@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/responsavel")
+@RequestMapping("/api/responsavel")
 public class ResponsavelController {
 
     @Autowired
