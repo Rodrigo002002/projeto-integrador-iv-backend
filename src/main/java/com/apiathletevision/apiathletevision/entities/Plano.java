@@ -21,6 +21,10 @@ public class Plano {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private String nome;
+    private String tipo;
+    private List<String> beneficios;
+
     private Double preco;
 
     @ManyToMany

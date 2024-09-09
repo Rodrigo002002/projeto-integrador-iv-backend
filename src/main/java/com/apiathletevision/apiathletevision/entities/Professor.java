@@ -1,29 +1,23 @@
 package com.apiathletevision.apiathletevision.entities;
 
-import java.util.List;
-
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "professores")
 public class Professor extends Usuario {
-    @OneToMany(mappedBy = "professor")
+
+    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
     private List<Turma> turmas;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Documento> documentos;
 
-    @ElementCollection
-    private List<String> funcionalidades;
-
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Servico servico;
 }

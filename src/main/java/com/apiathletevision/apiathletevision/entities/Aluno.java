@@ -1,29 +1,25 @@
 package com.apiathletevision.apiathletevision.entities;
 
-import java.util.List;
-
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "alunos")
 public class Aluno extends Usuario {
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.ALL)
     private Turma turma;
 
-    @ElementCollection
-    private List<String> funcionalidades;
-
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Documento> documentos;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Plano plano;
 }
