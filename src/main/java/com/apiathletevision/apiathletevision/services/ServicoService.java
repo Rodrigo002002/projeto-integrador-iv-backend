@@ -1,75 +1,75 @@
 package com.apiathletevision.apiathletevision.services;
 
 import com.apiathletevision.apiathletevision.dtos.ServicoDTO;
-import com.apiathletevision.apiathletevision.entities.Servico;
 import com.apiathletevision.apiathletevision.entities.Aluno;
 import com.apiathletevision.apiathletevision.entities.Pagamento;
 import com.apiathletevision.apiathletevision.entities.Professor;
-import com.apiathletevision.apiathletevision.repositories.ServicoRepository;
+import com.apiathletevision.apiathletevision.entities.Servico;
 import com.apiathletevision.apiathletevision.repositories.AlunoRepository;
 import com.apiathletevision.apiathletevision.repositories.PagamentoRepository;
 import com.apiathletevision.apiathletevision.repositories.ProfessorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.apiathletevision.apiathletevision.repositories.ServicoRepository;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ServicoService {
 
-    @Autowired
-    private ServicoRepository servicoRepository;
+    private final ServicoRepository servicoRepository;
+    private final PagamentoRepository pagamentoRepository;
+    private final ProfessorRepository professorRepository;
+    private final AlunoRepository alunoRepository;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private PagamentoRepository pagamentoRepository;
-
-    @Autowired
-    private ProfessorRepository professorRepository;
-
-    @Autowired
-    private AlunoRepository alunoRepository;
-
-    public List<Servico> getAllServicos() {
-        return servicoRepository.findAll();
+    public List<ServicoDTO> getAllServicos() {
+        return servicoRepository.findAll().stream().map(servico -> modelMapper.map(servico, ServicoDTO.class)).toList();
     }
 
-    public Optional<Servico> getServicoById(Integer id) {
-        return servicoRepository.findById(id);
+    public Optional<ServicoDTO> getServicoById(Integer id) {
+        Optional<Servico> servico = servicoRepository.findById(id);
+        ServicoDTO servicoDTO = modelMapper.map(servico, ServicoDTO.class);
+        return Optional.ofNullable(servicoDTO);
     }
 
-    public Servico createServico(ServicoDTO servicoDTO) {
+    public ServicoDTO createServico(ServicoDTO servicoDTO) {
         Servico servico = new Servico();
-        servico.setTipo(servicoDTO.getTipo());
 
+        servico.setTipo(servicoDTO.getTipo());
         Pagamento pagamento = pagamentoRepository.findById(servicoDTO.getPagamentoId()).orElse(null);
         servico.setPagamento(pagamento);
-
         Professor professor = professorRepository.findById(servicoDTO.getProfessorId()).orElse(null);
         servico.setProfessor(professor);
-
         Aluno aluno = alunoRepository.findById(servicoDTO.getAlunoId()).orElse(null);
         servico.setAluno(aluno);
 
-        return servicoRepository.save(servico);
+        servico = servicoRepository.save(servico);
+
+        return modelMapper.map(servico, ServicoDTO.class);
     }
 
-    public Servico updateServico(Integer id, ServicoDTO servicoDTO) {
+    public ServicoDTO updateServico(Integer id, ServicoDTO servicoDTO) {
         Optional<Servico> optionalServico = servicoRepository.findById(id);
-        if (optionalServico.isPresent()) {
-            Servico servico = optionalServico.get();
-            servico.setTipo(servicoDTO.getTipo());
 
+        if (optionalServico.isPresent()) {
+
+            Servico servico = optionalServico.get();
+            servico.setId(id);
+            servico.setTipo(servicoDTO.getTipo());
             Pagamento pagamento = pagamentoRepository.findById(servicoDTO.getPagamentoId()).orElse(null);
             servico.setPagamento(pagamento);
-
             Professor professor = professorRepository.findById(servicoDTO.getProfessorId()).orElse(null);
             servico.setProfessor(professor);
-
             Aluno aluno = alunoRepository.findById(servicoDTO.getAlunoId()).orElse(null);
             servico.setAluno(aluno);
 
-            return servicoRepository.save(servico);
+            servico = servicoRepository.save(servico);
+
+            return modelMapper.map(servico, ServicoDTO.class);
         }
         return null;
     }

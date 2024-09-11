@@ -1,50 +1,53 @@
 package com.apiathletevision.apiathletevision.services;
 
 import com.apiathletevision.apiathletevision.dtos.AulaDTO;
-import com.apiathletevision.apiathletevision.entities.Aula;
 import com.apiathletevision.apiathletevision.entities.Aluno;
-import com.apiathletevision.apiathletevision.entities.Turma;
-import com.apiathletevision.apiathletevision.repositories.AulaRepository;
+import com.apiathletevision.apiathletevision.entities.Aula;
 import com.apiathletevision.apiathletevision.repositories.AlunoRepository;
+import com.apiathletevision.apiathletevision.repositories.AulaRepository;
 import com.apiathletevision.apiathletevision.repositories.TurmaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AulaService {
 
-    @Autowired
-    private AulaRepository aulaRepository;
+    private final AulaRepository aulaRepository;
 
-    @Autowired
-    private AlunoRepository alunoRepository;
+    private final AlunoRepository alunoRepository;
 
-    @Autowired
-    private TurmaRepository turmaRepository;
+    private final TurmaRepository turmaRepository;
 
-    public List<Aula> getAllAulas() {
-        return aulaRepository.findAll();
+    private final ModelMapper modelMapper;
+
+    public List<AulaDTO> getAllAulas() {
+        return aulaRepository.findAll().stream().map(aula -> modelMapper.map(aula, AulaDTO.class)).toList();
     }
 
-    public Optional<Aula> getAulaById(Integer id) {
-        return aulaRepository.findById(id);
+    public Optional<AulaDTO> getAulaById(Integer id) {
+        Optional<Aula> aula = aulaRepository.findById(id);
+        AulaDTO aulaDTO = modelMapper.map(aula, AulaDTO.class);
+        return Optional.ofNullable(aulaDTO);
     }
 
-    public Aula createAula(AulaDTO aulaDTO) {
+    public AulaDTO createAula(AulaDTO aulaDTO) {
         Aula aula = new Aula();
         aula.setData(aulaDTO.getData());
         aula.setTurma(turmaRepository.findById(aulaDTO.getTurmaId()).orElse(null));
 
         List<Aluno> alunosPresentes = alunoRepository.findAllById(aulaDTO.getAlunosPresentesIds());
         aula.setAlunosPresentes(alunosPresentes);
+        aulaRepository.save(aula);
 
-        return aulaRepository.save(aula);
+        return modelMapper.map(aula, AulaDTO.class);
     }
 
-    public Aula updateAula(Integer id, AulaDTO aulaDTO) {
+    public AulaDTO updateAula(Integer id, AulaDTO aulaDTO) {
         Optional<Aula> optionalAula = aulaRepository.findById(id);
         if (optionalAula.isPresent()) {
             Aula aula = optionalAula.get();
@@ -53,8 +56,9 @@ public class AulaService {
 
             List<Aluno> alunosPresentes = alunoRepository.findAllById(aulaDTO.getAlunosPresentesIds());
             aula.setAlunosPresentes(alunosPresentes);
+            aulaRepository.save(aula);
 
-            return aulaRepository.save(aula);
+            return modelMapper.map(aula, AulaDTO.class);
         }
         return null;
     }

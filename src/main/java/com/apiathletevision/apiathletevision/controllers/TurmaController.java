@@ -1,47 +1,53 @@
 package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.TurmaDTO;
-import com.apiathletevision.apiathletevision.entities.Turma;
 import com.apiathletevision.apiathletevision.services.TurmaService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/turma")
+@RequiredArgsConstructor
 public class TurmaController {
 
-    @Autowired
-    private TurmaService turmaService;
+    private final TurmaService turmaService;
 
     @GetMapping
-    public List<Turma> getAllTurmas() {
-        return turmaService.getAllTurmas();
+    public ResponseEntity<List<TurmaDTO>> getAllTurmas() {
+        List<TurmaDTO> turmas = turmaService.getAllTurmas();
+        return new ResponseEntity<>(turmas, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Turma> getTurmaById(@PathVariable Integer id) {
-        Optional<Turma> turma = turmaService.getTurmaById(id);
-        return turma.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<TurmaDTO> getTurmaById(@PathVariable("id") Integer id) {
+        return turmaService.getTurmaById(id)
+                .map(turma -> new ResponseEntity<>(turma, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
-    public Turma createTurma(@RequestBody TurmaDTO turmaDTO) {
-        return turmaService.createTurma(turmaDTO);
+    public ResponseEntity<TurmaDTO> createTurma(@RequestBody TurmaDTO turmaDTO) {
+        TurmaDTO turma = turmaService.createTurma(turmaDTO);
+        return new ResponseEntity<>(turma, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Turma> updateTurma(@PathVariable Integer id, @RequestBody TurmaDTO turmaDTO) {
-        Turma updatedTurma = turmaService.updateTurma(id, turmaDTO);
-        return updatedTurma != null ? ResponseEntity.ok(updatedTurma) : ResponseEntity.notFound().build();
+    public ResponseEntity<TurmaDTO> updateTurma(@PathVariable("id") Integer id, @RequestBody TurmaDTO turmaDTO) {
+        TurmaDTO turma = turmaService.updateTurma(id, turmaDTO);
+
+        if (turma != null) {
+            return new ResponseEntity<>(turma, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTurma(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteTurma(@PathVariable("id") Integer id) {
         turmaService.deleteTurma(id);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

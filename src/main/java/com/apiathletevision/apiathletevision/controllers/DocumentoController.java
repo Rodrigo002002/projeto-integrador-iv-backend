@@ -1,9 +1,9 @@
 package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.DocumentoDTO;
-import com.apiathletevision.apiathletevision.entities.Documento;
 import com.apiathletevision.apiathletevision.services.DocumentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,30 +18,34 @@ public class DocumentoController {
     private DocumentoService documentoService;
 
     @GetMapping
-    public List<Documento> getAllDocumentos() {
+    public List<DocumentoDTO> getAllDocumentos() {
         return documentoService.getAllDocumentos();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Documento> getDocumentoById(@PathVariable Integer id) {
-        Optional<Documento> documento = documentoService.getDocumentoById(id);
+    public ResponseEntity<DocumentoDTO> getDocumentoById(@PathVariable("id") Integer id) {
+        Optional<DocumentoDTO> documento = documentoService.getDocumentoById(id);
         return documento.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Documento createDocumento(@RequestBody DocumentoDTO documentoDTO) {
+    public DocumentoDTO createDocumento(@RequestBody DocumentoDTO documentoDTO) {
         return documentoService.createDocumento(documentoDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Documento> updateDocumento(@PathVariable Integer id, @RequestBody DocumentoDTO documentoDTO) {
-        Documento updatedDocumento = documentoService.updateDocumento(id, documentoDTO);
-        return updatedDocumento != null ? ResponseEntity.ok(updatedDocumento) : ResponseEntity.notFound().build();
+    public ResponseEntity<DocumentoDTO> updateDocumento(@PathVariable("id") Integer id, @RequestBody DocumentoDTO documentoDTO) {
+        DocumentoDTO documento = documentoService.updateDocumento(id, documentoDTO);
+
+        if (documento != null) {
+            return new ResponseEntity<>(documento, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDocumento(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteDocumento(@PathVariable("id") Integer id) {
         documentoService.deleteDocumento(id);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

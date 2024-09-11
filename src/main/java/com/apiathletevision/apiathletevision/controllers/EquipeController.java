@@ -1,47 +1,55 @@
 package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.EquipeDTO;
-import com.apiathletevision.apiathletevision.entities.Equipe;
 import com.apiathletevision.apiathletevision.services.EquipeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/equipe")
+@RequiredArgsConstructor
 public class EquipeController {
 
-    @Autowired
-    private EquipeService equipeService;
+    private final EquipeService equipeService;
+    private final ModelMapper modelMapper;
 
     @GetMapping
-    public List<Equipe> getAllEquipes() {
-        return equipeService.getAllEquipes();
+    public ResponseEntity<List<EquipeDTO>> getAllEquipes() {
+        List<EquipeDTO> equipes = equipeService.getAllEquipes();
+        return new ResponseEntity<>(equipes, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Equipe> getEquipeById(@PathVariable Integer id) {
-        Optional<Equipe> equipe = equipeService.getEquipeById(id);
-        return equipe.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<EquipeDTO> getEquipeById(@PathVariable("id") Integer id) {
+        return equipeService.getEquipeById(id)
+                .map(equipe -> new ResponseEntity<>(equipe, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
-    public Equipe createEquipe(@RequestBody EquipeDTO equipeDTO) {
-        return equipeService.createEquipe(equipeDTO);
+    public ResponseEntity<EquipeDTO> createEquipe(@RequestBody EquipeDTO equipeDTO) {
+        EquipeDTO equipe = equipeService.createEquipe(equipeDTO);
+        return new ResponseEntity<>(equipe, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Equipe> updateEquipe(@PathVariable Integer id, @RequestBody EquipeDTO equipeDTO) {
-        Equipe updatedEquipe = equipeService.updateEquipe(id, equipeDTO);
-        return updatedEquipe != null ? ResponseEntity.ok(updatedEquipe) : ResponseEntity.notFound().build();
+    public ResponseEntity<EquipeDTO> updateEquipe(@PathVariable("id") Integer id, @RequestBody EquipeDTO equipeDTO) {
+        EquipeDTO equipe = equipeService.updateEquipe(id, equipeDTO);
+
+        if (equipe != null) {
+            return new ResponseEntity<>(equipe, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEquipe(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteEquipe(@PathVariable("id") Integer id) {
         equipeService.deleteEquipe(id);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -45,7 +45,7 @@ public class TurmaServiceTests {
 
         when(turmaRepository.save(any(Turma.class))).thenReturn(turma);
 
-        Turma createdTurma = turmaService.createTurma(turmaDTO);
+        TurmaDTO createdTurma = turmaService.createTurma(turmaDTO);
         assertNotNull(createdTurma);
         assertEquals(turmaDTO.getHorario(), createdTurma.getHorario());
         verify(turmaRepository, times(1)).save(any(Turma.class));
@@ -57,7 +57,7 @@ public class TurmaServiceTests {
         Turma turma2 = new Turma();
         when(turmaRepository.findAll()).thenReturn(Arrays.asList(turma1, turma2));
 
-        List<Turma> turmas = turmaService.getAllTurmas();
+        List<TurmaDTO> turmas = turmaService.getAllTurmas();
         assertNotNull(turmas);
         assertEquals(2, turmas.size());
         verify(turmaRepository, times(1)).findAll();
@@ -68,7 +68,7 @@ public class TurmaServiceTests {
         Turma turma = new Turma();
         when(turmaRepository.findById(1)).thenReturn(Optional.of(turma));
 
-        Optional<Turma> foundTurma = turmaService.getTurmaById(1);
+        Optional<TurmaDTO> foundTurma = turmaService.getTurmaById(1);
         assertTrue(foundTurma.isPresent());
         assertEquals(turma, foundTurma.get());
         verify(turmaRepository, times(1)).findById(1);
@@ -85,7 +85,7 @@ public class TurmaServiceTests {
         when(turmaRepository.findById(1)).thenReturn(Optional.of(existingTurma));
         when(turmaRepository.save(any(Turma.class))).thenReturn(existingTurma);
 
-        Turma updatedTurma = turmaService.updateTurma(1, turmaDTO);
+        TurmaDTO updatedTurma = turmaService.updateTurma(1, turmaDTO);
         assertNotNull(updatedTurma);
         assertEquals(turmaDTO.getHorario(), updatedTurma.getHorario());
         verify(turmaRepository, times(1)).findById(1);

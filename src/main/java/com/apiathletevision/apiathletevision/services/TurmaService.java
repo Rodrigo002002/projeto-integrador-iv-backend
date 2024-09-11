@@ -1,88 +1,79 @@
 package com.apiathletevision.apiathletevision.services;
 
 import com.apiathletevision.apiathletevision.dtos.TurmaDTO;
-import com.apiathletevision.apiathletevision.entities.Turma;
-import com.apiathletevision.apiathletevision.entities.Aluno;
-import com.apiathletevision.apiathletevision.entities.Aula;
-import com.apiathletevision.apiathletevision.entities.Modalidade;
-import com.apiathletevision.apiathletevision.entities.Professor;
-import com.apiathletevision.apiathletevision.repositories.TurmaRepository;
-import com.apiathletevision.apiathletevision.repositories.AlunoRepository;
-import com.apiathletevision.apiathletevision.repositories.AulaRepository;
-import com.apiathletevision.apiathletevision.repositories.ModalidadeRepository;
-import com.apiathletevision.apiathletevision.repositories.ProfessorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.apiathletevision.apiathletevision.entities.*;
+import com.apiathletevision.apiathletevision.repositories.*;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TurmaService {
 
-    @Autowired
-    private TurmaRepository turmaRepository;
+    private final TurmaRepository turmaRepository;
 
-    @Autowired
-    private AlunoRepository alunoRepository;
+    private final AlunoRepository alunoRepository;
 
-    @Autowired
-    private AulaRepository aulaRepository;
+    private final AulaRepository aulaRepository;
 
-    @Autowired
-    private ModalidadeRepository modalidadeRepository;
+    private final ModalidadeRepository modalidadeRepository;
 
-    @Autowired
-    private ProfessorRepository professorRepository;
+    private final ProfessorRepository professorRepository;
 
-    public List<Turma> getAllTurmas() {
-        return turmaRepository.findAll();
+    private final ModelMapper modelMapper;
+
+    public List<TurmaDTO> getAllTurmas() {
+        return turmaRepository.findAll().stream().map(turma -> modelMapper.map(turma, TurmaDTO.class)).toList();
     }
 
-    public Optional<Turma> getTurmaById(Integer id) {
-        return turmaRepository.findById(id);
+    public Optional<TurmaDTO> getTurmaById(Integer id) {
+        Optional<Turma> turma = turmaRepository.findById(id);
+        TurmaDTO turmaDTO = modelMapper.map(turma, TurmaDTO.class);
+        return Optional.ofNullable(turmaDTO);
     }
 
-    public Turma createTurma(TurmaDTO turmaDTO) {
+    public TurmaDTO createTurma(TurmaDTO turmaDTO) {
         Turma turma = new Turma();
 
         List<Modalidade> modalidades = modalidadeRepository.findAllById(turmaDTO.getModalidadeIds());
         turma.setModalidades(modalidades);
-
         List<Aula> aulas = aulaRepository.findAllById(turmaDTO.getAulaIds());
         turma.setAulas(aulas);
-
         List<Aluno> alunos = alunoRepository.findAllById(turmaDTO.getAlunoIds());
         turma.setAlunos(alunos);
-
         Professor professor = professorRepository.findById(turmaDTO.getProfessorId()).orElse(null);
         turma.setProfessor(professor);
-
         turma.setHorario(turmaDTO.getHorario());
 
-        return turmaRepository.save(turma);
+        turma = turmaRepository.save(turma);
+
+        return modelMapper.map(turma, TurmaDTO.class);
     }
 
-    public Turma updateTurma(Integer id, TurmaDTO turmaDTO) {
+    public TurmaDTO updateTurma(Integer id, TurmaDTO turmaDTO) {
         Optional<Turma> optionalTurma = turmaRepository.findById(id);
-        if (optionalTurma.isPresent()) {
-            Turma turma = optionalTurma.get();
 
+        if (optionalTurma.isPresent()) {
+
+            Turma turma = optionalTurma.get();
+            turma.setId(id);
             List<Modalidade> modalidades = modalidadeRepository.findAllById(turmaDTO.getModalidadeIds());
             turma.setModalidades(modalidades);
-
             List<Aula> aulas = aulaRepository.findAllById(turmaDTO.getAulaIds());
             turma.setAulas(aulas);
-
             List<Aluno> alunos = alunoRepository.findAllById(turmaDTO.getAlunoIds());
             turma.setAlunos(alunos);
-
             Professor professor = professorRepository.findById(turmaDTO.getProfessorId()).orElse(null);
             turma.setProfessor(professor);
-
             turma.setHorario(turmaDTO.getHorario());
 
-            return turmaRepository.save(turma);
+            turma = turmaRepository.save(turma);
+
+            return modelMapper.map(turma, TurmaDTO.class);
         }
         return null;
     }

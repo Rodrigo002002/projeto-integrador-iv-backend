@@ -1,53 +1,60 @@
 package com.apiathletevision.apiathletevision.services;
 
 import com.apiathletevision.apiathletevision.dtos.EquipeDTO;
-import com.apiathletevision.apiathletevision.entities.Equipe;
 import com.apiathletevision.apiathletevision.entities.Aluno;
-import com.apiathletevision.apiathletevision.repositories.EquipeRepository;
+import com.apiathletevision.apiathletevision.entities.Equipe;
 import com.apiathletevision.apiathletevision.repositories.AlunoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.apiathletevision.apiathletevision.repositories.EquipeRepository;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class EquipeService {
 
-    @Autowired
-    private EquipeRepository equipeRepository;
+    private final EquipeRepository equipeRepository;
+    private final AlunoRepository alunoRepository;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private AlunoRepository alunoRepository;
-
-    public List<Equipe> getAllEquipes() {
-        return equipeRepository.findAll();
+    public List<EquipeDTO> getAllEquipes() {
+        return equipeRepository.findAll().stream().map(equipe -> modelMapper.map(equipe, EquipeDTO.class)).toList();
     }
 
-    public Optional<Equipe> getEquipeById(Integer id) {
-        return equipeRepository.findById(id);
+    public Optional<EquipeDTO> getEquipeById(Integer id) {
+        Optional<Equipe> equipe = equipeRepository.findById(id);
+        EquipeDTO equipeDTO = modelMapper.map(equipe, EquipeDTO.class);
+        return Optional.ofNullable(equipeDTO);
     }
 
-    public Equipe createEquipe(EquipeDTO equipeDTO) {
+    public EquipeDTO createEquipe(EquipeDTO equipeDTO) {
         Equipe equipe = new Equipe();
-        equipe.setNome(equipeDTO.getNome());
 
+        equipe.setNome(equipeDTO.getNome());
         List<Aluno> alunos = alunoRepository.findAllById(equipeDTO.getAlunosIds());
         equipe.setAlunos(alunos);
 
-        return equipeRepository.save(equipe);
+        equipe = equipeRepository.save(equipe);
+
+        return modelMapper.map(equipe, EquipeDTO.class);
     }
 
-    public Equipe updateEquipe(Integer id, EquipeDTO equipeDTO) {
+    public EquipeDTO updateEquipe(Integer id, EquipeDTO equipeDTO) {
         Optional<Equipe> optionalEquipe = equipeRepository.findById(id);
+
         if (optionalEquipe.isPresent()) {
             Equipe equipe = optionalEquipe.get();
+            equipe.setId(id);
             equipe.setNome(equipeDTO.getNome());
-
             List<Aluno> alunos = alunoRepository.findAllById(equipeDTO.getAlunosIds());
             equipe.setAlunos(alunos);
 
-            return equipeRepository.save(equipe);
+            equipeRepository.save(equipe);
+
+            return modelMapper.map(equipe, EquipeDTO.class);
         }
         return null;
     }

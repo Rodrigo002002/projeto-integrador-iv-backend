@@ -1,47 +1,53 @@
 package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.PagamentoDTO;
-import com.apiathletevision.apiathletevision.entities.Pagamento;
 import com.apiathletevision.apiathletevision.services.PagamentoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/pagamento")
+@RequiredArgsConstructor
 public class PagamentoController {
 
-    @Autowired
-    private PagamentoService pagamentoService;
+    private final PagamentoService pagamentoService;
 
     @GetMapping
-    public List<Pagamento> getAllPagamentos() {
-        return pagamentoService.getAllPagamentos();
+    public ResponseEntity<List<PagamentoDTO>> getAllPagamentos() {
+        List<PagamentoDTO> pagamentos = pagamentoService.getAllPagamentos();
+        return new ResponseEntity<>(pagamentos, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pagamento> getPagamentoById(@PathVariable Integer id) {
-        Optional<Pagamento> pagamento = pagamentoService.getPagamentoById(id);
-        return pagamento.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<PagamentoDTO> getPagamentoById(@PathVariable("id") Integer id) {
+        return pagamentoService.getPagamentoById(id)
+                .map(pagamento -> new ResponseEntity<>(pagamento, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
-    public Pagamento createPagamento(@RequestBody PagamentoDTO pagamentoDTO) {
-        return pagamentoService.createPagamento(pagamentoDTO);
+    public ResponseEntity<PagamentoDTO> createPagamento(@RequestBody PagamentoDTO pagamentoDTO) {
+        PagamentoDTO pagamento = pagamentoService.createPagamento(pagamentoDTO);
+        return new ResponseEntity<>(pagamento, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pagamento> updatePagamento(@PathVariable Integer id, @RequestBody PagamentoDTO pagamentoDTO) {
-        Pagamento updatedPagamento = pagamentoService.updatePagamento(id, pagamentoDTO);
-        return updatedPagamento != null ? ResponseEntity.ok(updatedPagamento) : ResponseEntity.notFound().build();
+    public ResponseEntity<PagamentoDTO> updatePagamento(@PathVariable("id") Integer id, @RequestBody PagamentoDTO pagamentoDTO) {
+        PagamentoDTO pagamento = pagamentoService.updatePagamento(id, pagamentoDTO);
+
+        if (pagamento != null) {
+            return new ResponseEntity<>(pagamento, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePagamento(@PathVariable Integer id) {
+    public ResponseEntity<Void> deletePagamento(@PathVariable("id") Integer id) {
         pagamentoService.deletePagamento(id);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

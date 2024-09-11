@@ -1,8 +1,8 @@
-package com.apiathletevision.apiathletevision.dtos;
+package com.apiathletevision.apiathletevision.dtos.auth;
 
 import java.util.List;
 
-public record RegistroAlunoDTO(String nome,
+public record RegisterAlunoDTO(String nome,
                                String telefone,
                                String email,
                                String password,

@@ -31,24 +31,30 @@ public class ProfessorService {
 
     public ProfessorDTO createProfessor(ProfessorDTO professorDTO) {
         Professor professor = new Professor();
+
         professor.setNome(professorDTO.getNome());
         professor.setRole(professorDTO.getRole());
         professor.setTelefone(professorDTO.getTelefone());
         professor.setEmail(professorDTO.getEmail());
-        professorRepository.save(professor);
+
+        professor = professorRepository.save(professor);
 
         return modelMapper.map(professor, ProfessorDTO.class);
     }
 
     public ProfessorDTO updateProfessor(UUID id, ProfessorDTO professorDTO) {
         Optional<Professor> optionalProfessor = professorRepository.findById(id);
+
         if (optionalProfessor.isPresent()) {
+
             Professor professor = optionalProfessor.get();
+            professor.setId(id);
             professor.setNome(professorDTO.getNome());
             professor.setRole(professorDTO.getRole());
             professor.setTelefone(professorDTO.getTelefone());
             professor.setEmail(professorDTO.getEmail());
-            professorRepository.save(professor);
+
+            professor = professorRepository.save(professor);
 
             return modelMapper.map(professor, ProfessorDTO.class);
         }

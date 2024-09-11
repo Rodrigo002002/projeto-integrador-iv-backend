@@ -1,47 +1,49 @@
 package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.ModalidadeDTO;
-import com.apiathletevision.apiathletevision.entities.Modalidade;
 import com.apiathletevision.apiathletevision.services.ModalidadeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/modalidade")
+@RequiredArgsConstructor
 public class ModalidadeController {
 
-    @Autowired
-    private ModalidadeService modalidadeService;
+    private final ModalidadeService modalidadeService;
 
     @GetMapping
-    public List<Modalidade> getAllModalidades() {
-        return modalidadeService.getAllModalidades();
+    public ResponseEntity<List<ModalidadeDTO>> getAllModalidades() {
+        List<ModalidadeDTO> modalidades = modalidadeService.getAllModalidades();
+        return new ResponseEntity<>(modalidades, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Modalidade> getModalidadeById(@PathVariable Integer id) {
-        Optional<Modalidade> modalidade = modalidadeService.getModalidadeById(id);
-        return modalidade.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ModalidadeDTO> getModalidadeById(@PathVariable("id") Integer id) {
+        return modalidadeService.getModalidadeById(id)
+                .map(modalidade -> new ResponseEntity<>(modalidade, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
-    public Modalidade createModalidade(@RequestBody ModalidadeDTO modalidadeDTO) {
-        return modalidadeService.createModalidade(modalidadeDTO);
+    public ResponseEntity<ModalidadeDTO> createModalidade(@RequestBody ModalidadeDTO modalidadeDTO) {
+        ModalidadeDTO modalidade = modalidadeService.createModalidade(modalidadeDTO);
+        return new ResponseEntity<>(modalidade, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Modalidade> updateModalidade(@PathVariable Integer id, @RequestBody ModalidadeDTO modalidadeDTO) {
-        Modalidade updatedModalidade = modalidadeService.updateModalidade(id, modalidadeDTO);
-        return updatedModalidade != null ? ResponseEntity.ok(updatedModalidade) : ResponseEntity.notFound().build();
+    public ResponseEntity<ModalidadeDTO> updateModalidade(@PathVariable("id") Integer id, @RequestBody ModalidadeDTO modalidadeDTO) {
+        ModalidadeDTO modalidade = modalidadeService.updateModalidade(id, modalidadeDTO);
+        return new ResponseEntity<>(modalidade, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteModalidade(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteModalidade(@PathVariable("id") Integer id) {
         modalidadeService.deleteModalidade(id);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

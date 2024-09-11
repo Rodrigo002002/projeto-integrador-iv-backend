@@ -41,8 +41,8 @@ public class AlunoService {
 
     public AlunoDTO createAluno(AlunoDTO alunoDTO) {
         Aluno aluno = new Aluno();
-        String encryptedPassword = new BCryptPasswordEncoder().encode(alunoDTO.getPassword());
 
+        String encryptedPassword = new BCryptPasswordEncoder().encode(alunoDTO.getPassword());
         aluno.setNome(alunoDTO.getNome());
         aluno.setRole(alunoDTO.getRole());
         aluno.setTelefone(alunoDTO.getTelefone());
@@ -58,10 +58,12 @@ public class AlunoService {
 
     public AlunoDTO updateAluno(UUID id, AlunoDTO alunoDTO) {
         Optional<Aluno> optionalAluno = alunoRepository.findById(id);
+
         if (optionalAluno.isPresent()) {
             String encryptedPassword = new BCryptPasswordEncoder().encode(alunoDTO.getPassword());
 
             Aluno aluno = optionalAluno.get();
+            aluno.setId(id);
             aluno.setNome(alunoDTO.getNome());
             aluno.setRole(alunoDTO.getRole());
             aluno.setTelefone(alunoDTO.getTelefone());
@@ -70,6 +72,9 @@ public class AlunoService {
             aluno.setTurma(turmaRepository.findById(alunoDTO.getTurmaId()).orElse(null));
             aluno.setDocumentos(documentoRepository.findAllById(alunoDTO.getDocumentosIds()));
             aluno.setPlano(planoRepository.findById(alunoDTO.getPlanoId()).orElse(null));
+
+            aluno = alunoRepository.save(aluno);
+
             return modelMapper.map(aluno, AlunoDTO.class);
         }
         return null;

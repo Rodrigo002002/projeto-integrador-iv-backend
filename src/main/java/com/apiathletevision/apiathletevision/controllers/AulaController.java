@@ -1,47 +1,52 @@
 package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.AulaDTO;
-import com.apiathletevision.apiathletevision.entities.Aula;
 import com.apiathletevision.apiathletevision.services.AulaService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/aula")
+@RequiredArgsConstructor
 public class AulaController {
 
-    @Autowired
-    private AulaService aulaService;
+    private final AulaService aulaService;
 
     @GetMapping
-    public List<Aula> getAllAulas() {
-        return aulaService.getAllAulas();
+    public ResponseEntity<List<AulaDTO>> getAllAulas() {
+        List<AulaDTO> aulas = aulaService.getAllAulas();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Aula> getAulaById(@PathVariable Integer id) {
-        Optional<Aula> aula = aulaService.getAulaById(id);
-        return aula.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<AulaDTO> getAulaById(@PathVariable("id") Integer id) {
+        return aulaService.getAulaById(id)
+                .map(aula -> new ResponseEntity<>(aula, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
-    public Aula createAula(@RequestBody AulaDTO aulaDTO) {
+    public AulaDTO createAula(@RequestBody AulaDTO aulaDTO) {
         return aulaService.createAula(aulaDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Aula> updateAula(@PathVariable Integer id, @RequestBody AulaDTO aulaDTO) {
-        Aula updatedAula = aulaService.updateAula(id, aulaDTO);
-        return updatedAula != null ? ResponseEntity.ok(updatedAula) : ResponseEntity.notFound().build();
+    public ResponseEntity<AulaDTO> updateAula(@PathVariable("id") Integer id, @RequestBody AulaDTO aulaDTO) {
+        AulaDTO aula = aulaService.updateAula(id, aulaDTO);
+
+        if (aula != null) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAula(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteAula(@PathVariable("id") Integer id) {
         aulaService.deleteAula(id);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

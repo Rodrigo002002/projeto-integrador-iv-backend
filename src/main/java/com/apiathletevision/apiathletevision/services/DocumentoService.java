@@ -3,40 +3,49 @@ package com.apiathletevision.apiathletevision.services;
 import com.apiathletevision.apiathletevision.dtos.DocumentoDTO;
 import com.apiathletevision.apiathletevision.entities.Documento;
 import com.apiathletevision.apiathletevision.repositories.DocumentoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class DocumentoService {
 
-    @Autowired
-    private DocumentoRepository documentoRepository;
+    private final DocumentoRepository documentoRepository;
 
-    public List<Documento> getAllDocumentos() {
-        return documentoRepository.findAll();
+    private final ModelMapper modelMapper;
+
+    public List<DocumentoDTO> getAllDocumentos() {
+        return documentoRepository.findAll().stream().map(documento -> modelMapper.map(documento, DocumentoDTO.class)).toList();
     }
 
-    public Optional<Documento> getDocumentoById(Integer id) {
-        return documentoRepository.findById(id);
+    public Optional<DocumentoDTO> getDocumentoById(Integer id) {
+        Optional<Documento> documento = documentoRepository.findById(id);
+        DocumentoDTO documentoDTO = modelMapper.map(documento, DocumentoDTO.class);
+        return Optional.ofNullable(documentoDTO);
     }
 
-    public Documento createDocumento(DocumentoDTO documentoDTO) {
+    public DocumentoDTO createDocumento(DocumentoDTO documentoDTO) {
         Documento documento = new Documento();
         documento.setTipo(documentoDTO.getTipo());
         documento.setImagem(documentoDTO.getImagem());
-        return documentoRepository.save(documento);
+        documentoRepository.save(documento);
+
+        return modelMapper.map(documento, DocumentoDTO.class);
     }
 
-    public Documento updateDocumento(Integer id, DocumentoDTO documentoDTO) {
+    public DocumentoDTO updateDocumento(Integer id, DocumentoDTO documentoDTO) {
         Optional<Documento> optionalDocumento = documentoRepository.findById(id);
         if (optionalDocumento.isPresent()) {
             Documento documento = optionalDocumento.get();
             documento.setTipo(documentoDTO.getTipo());
             documento.setImagem(documentoDTO.getImagem());
-            return documentoRepository.save(documento);
+            documentoRepository.save(documento);
+
+            return modelMapper.map(documento, DocumentoDTO.class);
         }
         return null;
     }

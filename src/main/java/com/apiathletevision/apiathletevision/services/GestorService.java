@@ -3,7 +3,8 @@ package com.apiathletevision.apiathletevision.services;
 import com.apiathletevision.apiathletevision.dtos.GestorDTO;
 import com.apiathletevision.apiathletevision.entities.Gestor;
 import com.apiathletevision.apiathletevision.repositories.GestorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,37 +12,50 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class GestorService {
 
-    @Autowired
-    private GestorRepository gestorRepository;
+    private final GestorRepository gestorRepository;
 
-    public List<Gestor> getAllGestores() {
-        return gestorRepository.findAll();
+    private final ModelMapper modelMapper;
+
+    public List<GestorDTO> getAllGestores() {
+        return gestorRepository.findAll().stream().map(gestor -> modelMapper.map(gestor, GestorDTO.class)).toList();
     }
 
-    public Optional<Gestor> getGestorById(UUID id) {
-        return gestorRepository.findById(id);
+    public Optional<GestorDTO> getGestorById(UUID id) {
+        Optional<Gestor> gestor = gestorRepository.findById(id);
+        GestorDTO gestorDTO = modelMapper.map(gestor, GestorDTO.class);
+        return Optional.ofNullable(gestorDTO);
     }
 
-    public Gestor createGestor(GestorDTO gestorDTO) {
+    public GestorDTO createGestor(GestorDTO gestorDTO) {
         Gestor gestor = new Gestor();
+
         gestor.setNome(gestorDTO.getNome());
         gestor.setRole(gestorDTO.getRole());
         gestor.setTelefone(gestorDTO.getTelefone());
         gestor.setEmail(gestorDTO.getEmail());
-        return gestorRepository.save(gestor);
+
+        gestor = gestorRepository.save(gestor);
+
+        return modelMapper.map(gestor, GestorDTO.class);
     }
 
-    public Gestor updateGestor(UUID id, GestorDTO gestorDTO) {
+    public GestorDTO updateGestor(UUID id, GestorDTO gestorDTO) {
         Optional<Gestor> optionalGestor = gestorRepository.findById(id);
+
         if (optionalGestor.isPresent()) {
             Gestor gestor = optionalGestor.get();
+            gestor.setId(id);
             gestor.setNome(gestorDTO.getNome());
             gestor.setRole(gestorDTO.getRole());
             gestor.setTelefone(gestorDTO.getTelefone());
             gestor.setEmail(gestorDTO.getEmail());
-            return gestorRepository.save(gestor);
+
+            gestor = gestorRepository.save(gestor);
+
+            return modelMapper.map(gestor, GestorDTO.class);
         }
         return null;
     }

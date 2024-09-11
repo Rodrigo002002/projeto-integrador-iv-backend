@@ -31,6 +31,8 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/apí/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/registrar/aluno").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/registrar/responsavel").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api-docs").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api-docs/**").permitAll()
