@@ -1,7 +1,9 @@
 package com.apiathletevision.apiathletevision.services;
 
-import com.apiathletevision.apiathletevision.dtos.ProfessorDTO;
+import com.apiathletevision.apiathletevision.dtos.professor.request.ProfessorRequestDTO;
+import com.apiathletevision.apiathletevision.dtos.professor.response.ProfessorResponseDTO;
 import com.apiathletevision.apiathletevision.entities.Professor;
+import com.apiathletevision.apiathletevision.repositories.DocumentoRepository;
 import com.apiathletevision.apiathletevision.repositories.ProfessorRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -19,44 +21,52 @@ public class ProfessorService {
 
     private final ModelMapper modelMapper;
 
-    public List<ProfessorDTO> getAllProfessors() {
-        return professorRepository.findAll().stream().map(professor -> modelMapper.map(professor, ProfessorDTO.class)).toList();
+    private final DocumentoRepository documentoRepository;
+
+    public List<ProfessorResponseDTO> getAllProfessors() {
+        return professorRepository.findAll().stream().map(professor -> modelMapper.map(professor, ProfessorResponseDTO.class)).toList();
     }
 
-    public Optional<ProfessorDTO> getProfessorById(UUID id) {
+    public Optional<ProfessorResponseDTO> getProfessorById(UUID id) {
         Optional<Professor> professor = professorRepository.findById(id);
-        ProfessorDTO professorDTO = modelMapper.map(professor, ProfessorDTO.class);
-        return Optional.ofNullable(professorDTO);
+        ProfessorResponseDTO professorResponseDTO = modelMapper.map(professor, ProfessorResponseDTO.class);
+        return Optional.ofNullable(professorResponseDTO);
     }
 
-    public ProfessorDTO createProfessor(ProfessorDTO professorDTO) {
+    public ProfessorRequestDTO createProfessor(ProfessorRequestDTO professorRequestDTO) {
         Professor professor = new Professor();
 
-        professor.setNome(professorDTO.getNome());
-        professor.setRole(professorDTO.getRole());
-        professor.setTelefone(professorDTO.getTelefone());
-        professor.setEmail(professorDTO.getEmail());
+        professor.setNome(professorRequestDTO.getNome());
+        professor.setRole(professorRequestDTO.getRole());
+        professor.setTelefone(professorRequestDTO.getTelefone());
+        professor.setEmail(professorRequestDTO.getEmail());
+        professor.setRg(professorRequestDTO.getRg());
+        professor.setDocumentos(documentoRepository.findAllById(professorRequestDTO.getDocumentosIds()));
+        professor.setCpf(professorRequestDTO.getCpf());
 
         professor = professorRepository.save(professor);
 
-        return modelMapper.map(professor, ProfessorDTO.class);
+        return modelMapper.map(professor, ProfessorRequestDTO.class);
     }
 
-    public ProfessorDTO updateProfessor(UUID id, ProfessorDTO professorDTO) {
+    public ProfessorRequestDTO updateProfessor(UUID id, ProfessorRequestDTO professorRequestDTO) {
         Optional<Professor> optionalProfessor = professorRepository.findById(id);
 
         if (optionalProfessor.isPresent()) {
 
             Professor professor = optionalProfessor.get();
             professor.setId(id);
-            professor.setNome(professorDTO.getNome());
-            professor.setRole(professorDTO.getRole());
-            professor.setTelefone(professorDTO.getTelefone());
-            professor.setEmail(professorDTO.getEmail());
+            professor.setNome(professorRequestDTO.getNome());
+            professor.setRole(professorRequestDTO.getRole());
+            professor.setTelefone(professorRequestDTO.getTelefone());
+            professor.setEmail(professorRequestDTO.getEmail());
+            professor.setRg(professorRequestDTO.getRg());
+            professor.setDocumentos(documentoRepository.findAllById(professorRequestDTO.getDocumentosIds()));
+            professor.setCpf(professorRequestDTO.getCpf());
 
             professor = professorRepository.save(professor);
 
-            return modelMapper.map(professor, ProfessorDTO.class);
+            return modelMapper.map(professor, ProfessorRequestDTO.class);
         }
         return null;
     }

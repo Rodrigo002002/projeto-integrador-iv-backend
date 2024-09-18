@@ -15,6 +15,8 @@ public class AlunoDTO {
     private String email;
     private String password;
     private Integer turmaId;
+    private String rg;
+    private String cpf;
     private List<Integer> documentosIds;
     private Integer planoId;
 }

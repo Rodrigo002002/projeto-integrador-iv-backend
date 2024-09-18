@@ -2,6 +2,7 @@ package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.EquipeDTO;
 import com.apiathletevision.apiathletevision.services.EquipeService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/equipe")
 @RequiredArgsConstructor
+@Tag(name = "Equipe")
 public class EquipeController {
 
     private final EquipeService equipeService;

@@ -28,7 +28,7 @@ public class Turma {
     @ManyToMany
     private List<Modalidade> modalidades;
     
-    @OneToMany(mappedBy = "turma", targetEntity = Aula.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "turma" ,targetEntity = Aula.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Aula> aulas;
     
     @OneToMany(mappedBy = "turma", targetEntity = Aluno.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -37,5 +37,5 @@ public class Turma {
     @ManyToOne
     private Professor professor;
 
-    private LocalDateTime horario;
+    private String periodo;
 }

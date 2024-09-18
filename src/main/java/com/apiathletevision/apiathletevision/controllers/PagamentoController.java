@@ -2,6 +2,7 @@ package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.PagamentoDTO;
 import com.apiathletevision.apiathletevision.services.PagamentoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/pagamento")
 @RequiredArgsConstructor
+@Tag(name = "Pagamento")
 public class PagamentoController {
 
     private final PagamentoService pagamentoService;

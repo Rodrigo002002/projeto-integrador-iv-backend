@@ -2,6 +2,7 @@ package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.ResponsavelDTO;
 import com.apiathletevision.apiathletevision.services.ResponsavelService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/responsavel")
 @RequiredArgsConstructor
+@Tag(name = "Responsavel")
 public class ResponsavelController {
 
     private final ResponsavelService responsavelService;

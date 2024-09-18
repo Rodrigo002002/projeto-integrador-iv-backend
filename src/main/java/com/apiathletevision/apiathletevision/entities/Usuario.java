@@ -24,6 +24,7 @@ public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
     private UUID id;
 
     @Column(name = "nome")
@@ -37,6 +38,12 @@ public class Usuario implements UserDetails {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "rg")
+    private String rg;
+
+    @Column(name = "cpf")
+    private String cpf;
 
     @Column(name = "role")
     private UserRole role;

@@ -2,11 +2,8 @@ package com.apiathletevision.apiathletevision.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.springframework.security.core.GrantedAuthority;
 import lombok.Setter;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Collection;
 import java.util.List;
 
 @Entity

@@ -3,7 +3,6 @@ package com.apiathletevision.apiathletevision.dtos;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,5 +14,5 @@ public class TurmaDTO {
     private List<Integer> aulaIds;
     private List<UUID> alunoIds;
     private UUID professorId;
-    private LocalDateTime horario;
+    private String periodo;
 }

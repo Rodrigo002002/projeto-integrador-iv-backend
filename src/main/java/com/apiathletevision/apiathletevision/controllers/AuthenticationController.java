@@ -11,6 +11,7 @@ import com.apiathletevision.apiathletevision.repositories.UsuarioRepository;
 import com.apiathletevision.apiathletevision.services.AlunoService;
 import com.apiathletevision.apiathletevision.services.ResponsavelService;
 import com.apiathletevision.apiathletevision.services.TokenService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Tag(name = "Auth")
 public class AuthenticationController {
 
     private static final Logger log = LoggerFactory.getLogger(AuthenticationController.class);

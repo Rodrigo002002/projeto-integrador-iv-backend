@@ -2,13 +2,7 @@ package com.apiathletevision.apiathletevision.entities;
 
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,17 +13,26 @@ import lombok.Setter;
 public class Plano {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
+    @Column(name = "nome")
     private String nome;
+
+    @Column(name = "tipo")
     private String tipo;
+
+    @Column(name = "beneficio")
     private List<String> beneficios;
 
+    @Column(name = "preco")
     private Double preco;
 
     @ManyToMany
+    @Column(name = "modalidades")
     private List<Modalidade> modalidades;
 
     @OneToMany
+    @Column(name = "pagamentos")
     private List<Pagamento> pagamentos;
 }

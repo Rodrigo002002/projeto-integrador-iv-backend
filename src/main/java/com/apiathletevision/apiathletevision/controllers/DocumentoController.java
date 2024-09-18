@@ -2,6 +2,7 @@ package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.DocumentoDTO;
 import com.apiathletevision.apiathletevision.services.DocumentoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/documento")
+@Tag(name = "Documento")
 public class DocumentoController {
 
     @Autowired

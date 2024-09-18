@@ -13,11 +13,14 @@ import java.util.List;
 public class Professor extends Usuario {
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
+    @Column(name = "turmas")
     private List<Turma> turmas;
 
     @OneToMany(cascade = CascadeType.ALL)
+    @Column(name = "documentos")
     private List<Documento> documentos;
 
     @OneToOne(cascade = CascadeType.ALL)
-    private Servico servico;
+    @Column(name = "servicos")
+    private List<Servico> servicos;
 }

@@ -2,6 +2,7 @@ package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.AulaDTO;
 import com.apiathletevision.apiathletevision.services.AulaService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/aula")
 @RequiredArgsConstructor
+@Tag(name = "Aula")
 public class AulaController {
 
     private final AulaService aulaService;

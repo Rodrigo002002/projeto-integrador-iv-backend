@@ -47,7 +47,7 @@ public class TurmaService {
         turma.setAlunos(alunos);
         Professor professor = professorRepository.findById(turmaDTO.getProfessorId()).orElse(null);
         turma.setProfessor(professor);
-        turma.setHorario(turmaDTO.getHorario());
+        turma.setPeriodo(turmaDTO.getPeriodo());
 
         turma = turmaRepository.save(turma);
 
@@ -69,7 +69,7 @@ public class TurmaService {
             turma.setAlunos(alunos);
             Professor professor = professorRepository.findById(turmaDTO.getProfessorId()).orElse(null);
             turma.setProfessor(professor);
-            turma.setHorario(turmaDTO.getHorario());
+            turma.setPeriodo(turmaDTO.getPeriodo());
 
             turma = turmaRepository.save(turma);
 

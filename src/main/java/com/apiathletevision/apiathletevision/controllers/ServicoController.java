@@ -3,6 +3,7 @@ package com.apiathletevision.apiathletevision.controllers;
 import com.apiathletevision.apiathletevision.dtos.ServicoDTO;
 import com.apiathletevision.apiathletevision.entities.Servico;
 import com.apiathletevision.apiathletevision.services.ServicoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/servico")
 @RequiredArgsConstructor
+@Tag(name = "Servico")
 public class ServicoController {
 
     private final ServicoService servicoService;

@@ -36,6 +36,8 @@ public class GestorService {
         gestor.setRole(gestorDTO.getRole());
         gestor.setTelefone(gestorDTO.getTelefone());
         gestor.setEmail(gestorDTO.getEmail());
+        gestor.setRg(gestorDTO.getRg());
+        gestor.setCpf(gestorDTO.getCpf());
 
         gestor = gestorRepository.save(gestor);
 
@@ -52,6 +54,8 @@ public class GestorService {
             gestor.setRole(gestorDTO.getRole());
             gestor.setTelefone(gestorDTO.getTelefone());
             gestor.setEmail(gestorDTO.getEmail());
+            gestor.setRg(gestorDTO.getRg());
+            gestor.setCpf(gestorDTO.getCpf());
 
             gestor = gestorRepository.save(gestor);
 

@@ -41,6 +41,8 @@ public class ResponsavelService {
         responsavel.setEmail(responsavelDTO.getEmail());
         responsavel.setPassword(encryptedPassword);
         responsavel.setAlunos(alunoRepository.findAllById(responsavelDTO.getAlunosIds()));
+        responsavel.setRg(responsavelDTO.getRg());
+        responsavel.setCpf(responsavelDTO.getCpf());
 
         responsavel = responsavelRepository.save(responsavel);
 
@@ -61,6 +63,8 @@ public class ResponsavelService {
             responsavel.setEmail(responsavelDTO.getEmail());
             responsavel.setPassword(encryptedPassword);
             responsavel.setAlunos(alunoRepository.findAllById(responsavelDTO.getAlunosIds()));
+            responsavel.setRg(responsavelDTO.getRg());
+            responsavel.setCpf(responsavelDTO.getCpf());
 
             responsavel = responsavelRepository.save(responsavel);
 

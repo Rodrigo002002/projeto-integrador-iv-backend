@@ -2,6 +2,7 @@ package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.GestorDTO;
 import com.apiathletevision.apiathletevision.services.GestorService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/gestor")
 @RequiredArgsConstructor
+@Tag(name = "Gestor")
 public class GestorController {
 
     private final GestorService gestorService;

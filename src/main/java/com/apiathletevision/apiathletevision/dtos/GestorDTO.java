@@ -10,5 +10,7 @@ public class GestorDTO {
     private String nome;
     private UserRole role;
     private String telefone;
+    private String rg;
+    private String cpf;
     private String email;
 }

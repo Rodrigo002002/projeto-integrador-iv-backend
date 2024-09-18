@@ -2,6 +2,7 @@ package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.TurmaDTO;
 import com.apiathletevision.apiathletevision.services.TurmaService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/turma")
 @RequiredArgsConstructor
+@Tag(name = "Turma")
 public class TurmaController {
 
     private final TurmaService turmaService;
