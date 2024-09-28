@@ -31,30 +31,30 @@ public class AulaService {
 
     public Optional<AulaDTO> getAulaById(Integer id) {
         Optional<Aula> aula = aulaRepository.findById(id);
-        AulaDTO aulaDTO = modelMapper.map(aula, AulaDTO.class);
-        return Optional.ofNullable(aulaDTO);
+        AulaDTO aulaRequestDTO = modelMapper.map(aula, AulaDTO.class);
+        return Optional.ofNullable(aulaRequestDTO);
     }
 
-    public AulaDTO createAula(AulaDTO aulaDTO) {
+    public AulaDTO createAula(AulaDTO aulaRequestDTO) {
         Aula aula = new Aula();
-        aula.setData(aulaDTO.getData());
-        aula.setTurma(turmaRepository.findById(aulaDTO.getTurmaId()).orElse(null));
+        aula.setData(aulaRequestDTO.getData());
+        aula.setTurma(turmaRepository.findById(aulaRequestDTO.getTurmaId()).orElse(null));
 
-        List<Aluno> alunosPresentes = alunoRepository.findAllById(aulaDTO.getAlunosPresentesIds());
+        List<Aluno> alunosPresentes = alunoRepository.findAllById(aulaRequestDTO.getAlunosPresentesIds());
         aula.setAlunosPresentes(alunosPresentes);
         aulaRepository.save(aula);
 
         return modelMapper.map(aula, AulaDTO.class);
     }
 
-    public AulaDTO updateAula(Integer id, AulaDTO aulaDTO) {
+    public AulaDTO updateAula(Integer id, AulaDTO aulaRequestDTO) {
         Optional<Aula> optionalAula = aulaRepository.findById(id);
         if (optionalAula.isPresent()) {
             Aula aula = optionalAula.get();
-            aula.setData(aulaDTO.getData());
-            aula.setTurma(turmaRepository.findById(aulaDTO.getTurmaId()).orElse(null));
+            aula.setData(aulaRequestDTO.getData());
+            aula.setTurma(turmaRepository.findById(aulaRequestDTO.getTurmaId()).orElse(null));
 
-            List<Aluno> alunosPresentes = alunoRepository.findAllById(aulaDTO.getAlunosPresentesIds());
+            List<Aluno> alunosPresentes = alunoRepository.findAllById(aulaRequestDTO.getAlunosPresentesIds());
             aula.setAlunosPresentes(alunosPresentes);
             aulaRepository.save(aula);
 

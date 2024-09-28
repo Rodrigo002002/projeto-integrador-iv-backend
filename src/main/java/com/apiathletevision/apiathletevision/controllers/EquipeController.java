@@ -34,14 +34,14 @@ public class EquipeController {
     }
 
     @PostMapping
-    public ResponseEntity<EquipeDTO> createEquipe(@RequestBody EquipeDTO equipeDTO) {
-        EquipeDTO equipe = equipeService.createEquipe(equipeDTO);
+    public ResponseEntity<EquipeDTO> createEquipe(@RequestBody EquipeDTO equipeRequestDTO) {
+        EquipeDTO equipe = equipeService.createEquipe(equipeRequestDTO);
         return new ResponseEntity<>(equipe, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EquipeDTO> updateEquipe(@PathVariable("id") Integer id, @RequestBody EquipeDTO equipeDTO) {
-        EquipeDTO equipe = equipeService.updateEquipe(id, equipeDTO);
+    public ResponseEntity<EquipeDTO> updateEquipe(@PathVariable("id") Integer id, @RequestBody EquipeDTO equipeRequestDTO) {
+        EquipeDTO equipe = equipeService.updateEquipe(id, equipeRequestDTO);
 
         if (equipe != null) {
             return new ResponseEntity<>(equipe, HttpStatus.OK);

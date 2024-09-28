@@ -10,7 +10,7 @@ import java.util.UUID;
 @Setter
 public class TurmaDTO {
     private Integer id;
-    private List<Integer> modalidadeIds;
+    private Integer modalidadeId;
     private List<Integer> aulaIds;
     private List<UUID> alunoIds;
     private UUID professorId;

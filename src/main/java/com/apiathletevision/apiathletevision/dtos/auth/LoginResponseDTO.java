@@ -1,4 +1,6 @@
 package com.apiathletevision.apiathletevision.dtos.auth;
 
-public record LoginResponseDTO(String token) {
+import com.apiathletevision.apiathletevision.enums.UserRole;
+
+public record LoginResponseDTO(String token, String nome, String email, UserRole role) {
 }

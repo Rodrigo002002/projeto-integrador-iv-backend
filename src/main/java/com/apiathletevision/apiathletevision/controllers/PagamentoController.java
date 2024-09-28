@@ -32,14 +32,14 @@ public class PagamentoController {
     }
 
     @PostMapping
-    public ResponseEntity<PagamentoDTO> createPagamento(@RequestBody PagamentoDTO pagamentoDTO) {
-        PagamentoDTO pagamento = pagamentoService.createPagamento(pagamentoDTO);
+    public ResponseEntity<PagamentoDTO> createPagamento(@RequestBody PagamentoDTO pagamentoRequestDTO) {
+        PagamentoDTO pagamento = pagamentoService.createPagamento(pagamentoRequestDTO);
         return new ResponseEntity<>(pagamento, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PagamentoDTO> updatePagamento(@PathVariable("id") Integer id, @RequestBody PagamentoDTO pagamentoDTO) {
-        PagamentoDTO pagamento = pagamentoService.updatePagamento(id, pagamentoDTO);
+    public ResponseEntity<PagamentoDTO> updatePagamento(@PathVariable("id") Integer id, @RequestBody PagamentoDTO pagamentoRequestDTO) {
+        PagamentoDTO pagamento = pagamentoService.updatePagamento(id, pagamentoRequestDTO);
 
         if (pagamento != null) {
             return new ResponseEntity<>(pagamento, HttpStatus.OK);

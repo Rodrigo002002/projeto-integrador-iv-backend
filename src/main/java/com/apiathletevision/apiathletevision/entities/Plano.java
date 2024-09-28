@@ -29,10 +29,8 @@ public class Plano {
     private Double preco;
 
     @ManyToMany
-    @Column(name = "modalidades")
     private List<Modalidade> modalidades;
 
     @OneToMany
-    @Column(name = "pagamentos")
     private List<Pagamento> pagamentos;
 }

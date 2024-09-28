@@ -1,7 +1,6 @@
 package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.ServicoDTO;
-import com.apiathletevision.apiathletevision.entities.Servico;
 import com.apiathletevision.apiathletevision.services.ServicoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -33,14 +32,14 @@ public class ServicoController {
     }
 
     @PostMapping
-    public ResponseEntity<ServicoDTO> createServico(@RequestBody ServicoDTO servicoDTO) {
-        ServicoDTO servico = servicoService.createServico(servicoDTO);
+    public ResponseEntity<ServicoDTO> createServico(@RequestBody ServicoDTO servicoRequestDTO) {
+        ServicoDTO servico = servicoService.createServico(servicoRequestDTO);
         return new ResponseEntity<>(servico, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ServicoDTO> updateServico(@PathVariable("id") Integer id, @RequestBody ServicoDTO servicoDTO) {
-        ServicoDTO servico = servicoService.updateServico(id, servicoDTO);
+    public ResponseEntity<ServicoDTO> updateServico(@PathVariable("id") Integer id, @RequestBody ServicoDTO servicoRequestDTO) {
+        ServicoDTO servico = servicoService.updateServico(id, servicoRequestDTO);
 
         if (servico != null) {
             return new ResponseEntity<>(servico, HttpStatus.OK);

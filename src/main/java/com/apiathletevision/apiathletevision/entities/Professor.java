@@ -12,15 +12,9 @@ import java.util.List;
 @Table(name = "professores")
 public class Professor extends Usuario {
 
-    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
-    @Column(name = "turmas")
-    private List<Turma> turmas;
-
     @OneToMany(cascade = CascadeType.ALL)
-    @Column(name = "documentos")
     private List<Documento> documentos;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @Column(name = "servicos")
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Servico> servicos;
 }

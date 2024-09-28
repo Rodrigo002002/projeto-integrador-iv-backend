@@ -1,7 +1,6 @@
 package com.apiathletevision.apiathletevision.services;
 
-import com.apiathletevision.apiathletevision.dtos.professor.request.ProfessorRequestDTO;
-import com.apiathletevision.apiathletevision.dtos.professor.response.ProfessorResponseDTO;
+import com.apiathletevision.apiathletevision.dtos.ProfessorDTO;
 import com.apiathletevision.apiathletevision.entities.Professor;
 import com.apiathletevision.apiathletevision.repositories.DocumentoRepository;
 import com.apiathletevision.apiathletevision.repositories.ProfessorRepository;
@@ -23,17 +22,17 @@ public class ProfessorService {
 
     private final DocumentoRepository documentoRepository;
 
-    public List<ProfessorResponseDTO> getAllProfessors() {
-        return professorRepository.findAll().stream().map(professor -> modelMapper.map(professor, ProfessorResponseDTO.class)).toList();
+    public List<ProfessorDTO> getAllProfessors() {
+        return professorRepository.findAll().stream().map(professor -> modelMapper.map(professor, ProfessorDTO.class)).toList();
     }
 
-    public Optional<ProfessorResponseDTO> getProfessorById(UUID id) {
+    public Optional<ProfessorDTO> getProfessorById(UUID id) {
         Optional<Professor> professor = professorRepository.findById(id);
-        ProfessorResponseDTO professorResponseDTO = modelMapper.map(professor, ProfessorResponseDTO.class);
+        ProfessorDTO professorResponseDTO = modelMapper.map(professor, ProfessorDTO.class);
         return Optional.ofNullable(professorResponseDTO);
     }
 
-    public ProfessorRequestDTO createProfessor(ProfessorRequestDTO professorRequestDTO) {
+    public ProfessorDTO createProfessor(ProfessorDTO professorRequestDTO) {
         Professor professor = new Professor();
 
         professor.setNome(professorRequestDTO.getNome());
@@ -46,10 +45,10 @@ public class ProfessorService {
 
         professor = professorRepository.save(professor);
 
-        return modelMapper.map(professor, ProfessorRequestDTO.class);
+        return modelMapper.map(professor, ProfessorDTO.class);
     }
 
-    public ProfessorRequestDTO updateProfessor(UUID id, ProfessorRequestDTO professorRequestDTO) {
+    public ProfessorDTO updateProfessor(UUID id, ProfessorDTO professorRequestDTO) {
         Optional<Professor> optionalProfessor = professorRepository.findById(id);
 
         if (optionalProfessor.isPresent()) {
@@ -66,7 +65,7 @@ public class ProfessorService {
 
             professor = professorRepository.save(professor);
 
-            return modelMapper.map(professor, ProfessorRequestDTO.class);
+            return modelMapper.map(professor, ProfessorDTO.class);
         }
         return null;
     }

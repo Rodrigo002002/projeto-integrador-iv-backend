@@ -32,14 +32,14 @@ public class ModalidadeController {
     }
 
     @PostMapping
-    public ResponseEntity<ModalidadeDTO> createModalidade(@RequestBody ModalidadeDTO modalidadeDTO) {
-        ModalidadeDTO modalidade = modalidadeService.createModalidade(modalidadeDTO);
+    public ResponseEntity<ModalidadeDTO> createModalidade(@RequestBody ModalidadeDTO modalidadeRequestDTO) {
+        ModalidadeDTO modalidade = modalidadeService.createModalidade(modalidadeRequestDTO);
         return new ResponseEntity<>(modalidade, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ModalidadeDTO> updateModalidade(@PathVariable("id") Integer id, @RequestBody ModalidadeDTO modalidadeDTO) {
-        ModalidadeDTO modalidade = modalidadeService.updateModalidade(id, modalidadeDTO);
+    public ResponseEntity<ModalidadeDTO> updateModalidade(@PathVariable("id") Integer id, @RequestBody ModalidadeDTO modalidadeRequestDTO) {
+        ModalidadeDTO modalidade = modalidadeService.updateModalidade(id, modalidadeRequestDTO);
         return new ResponseEntity<>(modalidade, HttpStatus.OK);
     }
 

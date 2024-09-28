@@ -32,8 +32,8 @@ public class TurmaController {
     }
 
     @PostMapping
-    public ResponseEntity<TurmaDTO> createTurma(@RequestBody TurmaDTO turmaDTO) {
-        TurmaDTO turma = turmaService.createTurma(turmaDTO);
+    public ResponseEntity<TurmaDTO> createTurma(@RequestBody TurmaDTO turmaRequestDTO) {
+        TurmaDTO turma = turmaService.createTurma(turmaRequestDTO);
         return new ResponseEntity<>(turma, HttpStatus.CREATED);
     }
 

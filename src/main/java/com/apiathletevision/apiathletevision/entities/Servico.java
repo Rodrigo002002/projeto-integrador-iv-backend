@@ -1,14 +1,11 @@
 package com.apiathletevision.apiathletevision.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,12 +14,18 @@ import lombok.Setter;
 public class Servico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
-    private String tipo;
+    @ManyToOne
+    private TipoServico tipoServico;
 
-    @OneToOne
-    private Pagamento pagamento;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "data")
+    private Date data;
+
+    @OneToMany
+    private List<Pagamento> pagamentos;
 
     @ManyToOne
     private Professor professor;

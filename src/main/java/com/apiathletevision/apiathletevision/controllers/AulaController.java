@@ -32,13 +32,13 @@ public class AulaController {
     }
 
     @PostMapping
-    public AulaDTO createAula(@RequestBody AulaDTO aulaDTO) {
-        return aulaService.createAula(aulaDTO);
+    public AulaDTO createAula(@RequestBody AulaDTO aulaRequestDTO) {
+        return aulaService.createAula(aulaRequestDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AulaDTO> updateAula(@PathVariable("id") Integer id, @RequestBody AulaDTO aulaDTO) {
-        AulaDTO aula = aulaService.updateAula(id, aulaDTO);
+    public ResponseEntity<AulaDTO> updateAula(@PathVariable("id") Integer id, @RequestBody AulaDTO aulaRequestDTO) {
+        AulaDTO aula = aulaService.updateAula(id, aulaRequestDTO);
 
         if (aula != null) {
             return new ResponseEntity<>(HttpStatus.OK);

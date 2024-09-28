@@ -32,18 +32,18 @@ public class EventoService {
 
     public Optional<EventoDTO> getEventoById(Integer id) {
         Optional<Evento> evento = eventoRepository.findById(id);
-        EventoDTO eventoDTO = modelMapper.map(evento, EventoDTO.class);
-        return Optional.ofNullable(eventoDTO);
+        EventoDTO eventoRequestDTO = modelMapper.map(evento, EventoDTO.class);
+        return Optional.ofNullable(eventoRequestDTO);
     }
 
-    public EventoDTO createEvento(EventoDTO eventoDTO) {
+    public EventoDTO createEvento(EventoDTO eventoRequestDTO) {
         Evento evento = new Evento();
-        evento.setDescricao(eventoDTO.getDescricao());
-        evento.setNome(eventoDTO.getNome());
-        evento.setData(eventoDTO.getData());
-        List<Equipe> equipes = equipeRepository.findAllById(eventoDTO.getEquipesIds());
+        evento.setDescricao(eventoRequestDTO.getDescricao());
+        evento.setNome(eventoRequestDTO.getNome());
+        evento.setData(eventoRequestDTO.getData());
+        List<Equipe> equipes = equipeRepository.findAllById(eventoRequestDTO.getEquipesIds());
         evento.setEquipes(equipes);
-        Modalidade modalidade = modalidadeRepository.findById(eventoDTO.getModalidadeId()).orElse(null);
+        Modalidade modalidade = modalidadeRepository.findById(eventoRequestDTO.getModalidadeId()).orElse(null);
         evento.setModalidade(modalidade);
 
         evento = eventoRepository.save(evento);
@@ -51,19 +51,19 @@ public class EventoService {
         return modelMapper.map(evento, EventoDTO.class);
     }
 
-    public EventoDTO updateEvento(Integer id, EventoDTO eventoDTO) {
+    public EventoDTO updateEvento(Integer id, EventoDTO eventoRequestDTO) {
         Optional<Evento> optionalEvento = eventoRepository.findById(id);
 
         if (optionalEvento.isPresent()) {
 
             Evento evento = optionalEvento.get();
             evento.setId(id);
-            evento.setDescricao(eventoDTO.getDescricao());
-            evento.setNome(eventoDTO.getNome());
-            evento.setData(eventoDTO.getData());
-            List<Equipe> equipes = equipeRepository.findAllById(eventoDTO.getEquipesIds());
+            evento.setDescricao(eventoRequestDTO.getDescricao());
+            evento.setNome(eventoRequestDTO.getNome());
+            evento.setData(eventoRequestDTO.getData());
+            List<Equipe> equipes = equipeRepository.findAllById(eventoRequestDTO.getEquipesIds());
             evento.setEquipes(equipes);
-            Modalidade modalidade = modalidadeRepository.findById(eventoDTO.getModalidadeId()).orElse(null);
+            Modalidade modalidade = modalidadeRepository.findById(eventoRequestDTO.getModalidadeId()).orElse(null);
             evento.setModalidade(modalidade);
 
             evento = eventoRepository.save(evento);

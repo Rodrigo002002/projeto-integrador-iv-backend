@@ -27,35 +27,35 @@ public class PlanoService {
 
     public Optional<PlanoDTO> getPlanoById(Integer id) {
         Optional<Plano> plano = planoRepository.findById(id);
-        PlanoDTO planoDTO = modelMapper.map(plano, PlanoDTO.class);
-        return Optional.ofNullable(planoDTO);
+        PlanoDTO planoRequestDTO = modelMapper.map(plano, PlanoDTO.class);
+        return Optional.ofNullable(planoRequestDTO);
     }
 
-    public PlanoDTO createPlano(PlanoDTO planoDTO) {
+    public PlanoDTO createPlano(PlanoDTO planoRequestDTO) {
         Plano plano = new Plano();
 
-        modelMapper.map(planoDTO, plano);
+        modelMapper.map(planoRequestDTO, plano);
 
-        plano.setModalidades(modalidadeRepository.findAllById(planoDTO.getModalidadesIds()));
-        plano.setPagamentos(pagamentoRepository.findAllById(planoDTO.getPagamentosIds()));
+        plano.setModalidades(modalidadeRepository.findAllById(planoRequestDTO.getModalidadesIds()));
+        plano.setPagamentos(pagamentoRepository.findAllById(planoRequestDTO.getPagamentosIds()));
         plano = planoRepository.save(plano);
 
         return modelMapper.map(plano, PlanoDTO.class);
     }
 
-    public PlanoDTO updatePlano(Integer id, PlanoDTO planoDTO) {
+    public PlanoDTO updatePlano(Integer id, PlanoDTO planoRequestDTO) {
         Optional<Plano> optionalPlano = planoRepository.findById(id);
 
         if (optionalPlano.isPresent()) {
             Plano plano = optionalPlano.get();
 
             plano.setId(id);
-            plano.setNome(planoDTO.getNome());
-            plano.setTipo(planoDTO.getTipo());
-            plano.setBeneficios(planoDTO.getBeneficios());
-            plano.setModalidades(modalidadeRepository.findAllById(planoDTO.getModalidadesIds()));
-            plano.setPagamentos(pagamentoRepository.findAllById(planoDTO.getPagamentosIds()));
-            plano.setPreco(planoDTO.getPreco());
+            plano.setNome(planoRequestDTO.getNome());
+            plano.setTipo(planoRequestDTO.getTipo());
+            plano.setBeneficios(planoRequestDTO.getBeneficios());
+            plano.setModalidades(modalidadeRepository.findAllById(planoRequestDTO.getModalidadesIds()));
+            plano.setPagamentos(pagamentoRepository.findAllById(planoRequestDTO.getPagamentosIds()));
+            plano.setPreco(planoRequestDTO.getPreco());
 
             plano = planoRepository.save(plano);
 

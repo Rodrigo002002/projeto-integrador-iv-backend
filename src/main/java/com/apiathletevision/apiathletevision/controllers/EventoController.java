@@ -32,14 +32,14 @@ public class EventoController {
     }
 
     @PostMapping
-    public ResponseEntity<EventoDTO> createEvento(@RequestBody EventoDTO eventoDTO) {
-        EventoDTO evento = eventoService.createEvento(eventoDTO);
+    public ResponseEntity<EventoDTO> createEvento(@RequestBody EventoDTO eventoRequestDTO) {
+        EventoDTO evento = eventoService.createEvento(eventoRequestDTO);
         return new ResponseEntity<>(evento, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EventoDTO> updateEvento(@PathVariable("id") Integer id, @RequestBody EventoDTO eventoDTO) {
-        EventoDTO evento = eventoService.updateEvento(id, eventoDTO);
+    public ResponseEntity<EventoDTO> updateEvento(@PathVariable("id") Integer id, @RequestBody EventoDTO eventoRequestDTO) {
+        EventoDTO evento = eventoService.updateEvento(id, eventoRequestDTO);
 
         if (evento != null) {
             return new ResponseEntity<>(evento, HttpStatus.OK);

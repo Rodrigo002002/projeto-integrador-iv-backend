@@ -32,44 +32,47 @@ public class TurmaService {
 
     public Optional<TurmaDTO> getTurmaById(Integer id) {
         Optional<Turma> turma = turmaRepository.findById(id);
-        TurmaDTO turmaDTO = modelMapper.map(turma, TurmaDTO.class);
-        return Optional.ofNullable(turmaDTO);
+        TurmaDTO turmaRequestDTO = modelMapper.map(turma, TurmaDTO.class);
+        return Optional.ofNullable(turmaRequestDTO);
     }
 
-    public TurmaDTO createTurma(TurmaDTO turmaDTO) {
+    public TurmaDTO createTurma(TurmaDTO turmaRequestDTO) {
         Turma turma = new Turma();
 
-        List<Modalidade> modalidades = modalidadeRepository.findAllById(turmaDTO.getModalidadeIds());
-        turma.setModalidades(modalidades);
-        List<Aula> aulas = aulaRepository.findAllById(turmaDTO.getAulaIds());
+        Optional<Modalidade> modalidade = modalidadeRepository.findById(turmaRequestDTO.getModalidadeId());
+        turma.setModalidade(modalidade.orElse(null));
+
+        List<Aula> aulas = aulaRepository.findAllById(turmaRequestDTO.getAulaIds());
         turma.setAulas(aulas);
-        List<Aluno> alunos = alunoRepository.findAllById(turmaDTO.getAlunoIds());
+        List<Aluno> alunos = alunoRepository.findAllById(turmaRequestDTO.getAlunoIds());
         turma.setAlunos(alunos);
-        Professor professor = professorRepository.findById(turmaDTO.getProfessorId()).orElse(null);
+        Professor professor = professorRepository.findById(turmaRequestDTO.getProfessorId()).orElse(null);
         turma.setProfessor(professor);
-        turma.setPeriodo(turmaDTO.getPeriodo());
+        turma.setPeriodo(turmaRequestDTO.getPeriodo());
 
         turma = turmaRepository.save(turma);
 
         return modelMapper.map(turma, TurmaDTO.class);
     }
 
-    public TurmaDTO updateTurma(Integer id, TurmaDTO turmaDTO) {
+    public TurmaDTO updateTurma(Integer id, TurmaDTO turmaRequestDTO) {
         Optional<Turma> optionalTurma = turmaRepository.findById(id);
 
         if (optionalTurma.isPresent()) {
 
             Turma turma = optionalTurma.get();
             turma.setId(id);
-            List<Modalidade> modalidades = modalidadeRepository.findAllById(turmaDTO.getModalidadeIds());
-            turma.setModalidades(modalidades);
-            List<Aula> aulas = aulaRepository.findAllById(turmaDTO.getAulaIds());
+
+            Optional<Modalidade> modalidade = modalidadeRepository.findById(turmaRequestDTO.getModalidadeId());
+            turma.setModalidade(modalidade.orElse(null));
+
+            List<Aula> aulas = aulaRepository.findAllById(turmaRequestDTO.getAulaIds());
             turma.setAulas(aulas);
-            List<Aluno> alunos = alunoRepository.findAllById(turmaDTO.getAlunoIds());
+            List<Aluno> alunos = alunoRepository.findAllById(turmaRequestDTO.getAlunoIds());
             turma.setAlunos(alunos);
-            Professor professor = professorRepository.findById(turmaDTO.getProfessorId()).orElse(null);
+            Professor professor = professorRepository.findById(turmaRequestDTO.getProfessorId()).orElse(null);
             turma.setProfessor(professor);
-            turma.setPeriodo(turmaDTO.getPeriodo());
+            turma.setPeriodo(turmaRequestDTO.getPeriodo());
 
             turma = turmaRepository.save(turma);
 

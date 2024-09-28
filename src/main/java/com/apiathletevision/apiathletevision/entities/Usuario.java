@@ -2,15 +2,12 @@ package com.apiathletevision.apiathletevision.entities;
 
 import com.apiathletevision.apiathletevision.enums.UserRole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -30,10 +27,13 @@ public class Usuario implements UserDetails {
     @Column(name = "nome")
     private String nome;
 
+    @Column(name = "role")
+    private UserRole role;
+
     @Column(name = "telefone")
     private String telefone;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "password")
@@ -45,11 +45,8 @@ public class Usuario implements UserDetails {
     @Column(name = "cpf")
     private String cpf;
 
-    @Column(name = "role")
-    private UserRole role;
-
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role == UserRole.GESTOR) return List.of(
+        if (this.role == UserRole.GESTOR) return List.of(
                 new SimpleGrantedAuthority("ROLE_GESTOR"),
                 new SimpleGrantedAuthority("ROLE_PROFESSOR"),
                 new SimpleGrantedAuthority("ROLE_ALUNO"),
@@ -68,5 +65,4 @@ public class Usuario implements UserDetails {
     public String getPassword() {
         return password;
     }
-
 }

@@ -26,15 +26,15 @@ public class EquipeService {
 
     public Optional<EquipeDTO> getEquipeById(Integer id) {
         Optional<Equipe> equipe = equipeRepository.findById(id);
-        EquipeDTO equipeDTO = modelMapper.map(equipe, EquipeDTO.class);
-        return Optional.ofNullable(equipeDTO);
+        EquipeDTO equipeRequestDTO = modelMapper.map(equipe, EquipeDTO.class);
+        return Optional.ofNullable(equipeRequestDTO);
     }
 
-    public EquipeDTO createEquipe(EquipeDTO equipeDTO) {
+    public EquipeDTO createEquipe(EquipeDTO equipeRequestDTO) {
         Equipe equipe = new Equipe();
 
-        equipe.setNome(equipeDTO.getNome());
-        List<Aluno> alunos = alunoRepository.findAllById(equipeDTO.getAlunosIds());
+        equipe.setNome(equipeRequestDTO.getNome());
+        List<Aluno> alunos = alunoRepository.findAllById(equipeRequestDTO.getAlunosIds());
         equipe.setAlunos(alunos);
 
         equipe = equipeRepository.save(equipe);
@@ -42,14 +42,14 @@ public class EquipeService {
         return modelMapper.map(equipe, EquipeDTO.class);
     }
 
-    public EquipeDTO updateEquipe(Integer id, EquipeDTO equipeDTO) {
+    public EquipeDTO updateEquipe(Integer id, EquipeDTO equipeRequestDTO) {
         Optional<Equipe> optionalEquipe = equipeRepository.findById(id);
 
         if (optionalEquipe.isPresent()) {
             Equipe equipe = optionalEquipe.get();
             equipe.setId(id);
-            equipe.setNome(equipeDTO.getNome());
-            List<Aluno> alunos = alunoRepository.findAllById(equipeDTO.getAlunosIds());
+            equipe.setNome(equipeRequestDTO.getNome());
+            List<Aluno> alunos = alunoRepository.findAllById(equipeRequestDTO.getAlunosIds());
             equipe.setAlunos(alunos);
 
             equipeRepository.save(equipe);

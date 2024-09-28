@@ -24,25 +24,25 @@ public class DocumentoService {
 
     public Optional<DocumentoDTO> getDocumentoById(Integer id) {
         Optional<Documento> documento = documentoRepository.findById(id);
-        DocumentoDTO documentoDTO = modelMapper.map(documento, DocumentoDTO.class);
-        return Optional.ofNullable(documentoDTO);
+        DocumentoDTO documentoRequestDTO = modelMapper.map(documento, DocumentoDTO.class);
+        return Optional.ofNullable(documentoRequestDTO);
     }
 
-    public DocumentoDTO createDocumento(DocumentoDTO documentoDTO) {
+    public DocumentoDTO createDocumento(DocumentoDTO documentoRequestDTO) {
         Documento documento = new Documento();
-        documento.setTipo(documentoDTO.getTipo());
-        documento.setImagem(documentoDTO.getImagem());
+        documento.setTipo(documentoRequestDTO.getTipo());
+        documento.setImagem(documentoRequestDTO.getImagem());
         documentoRepository.save(documento);
 
         return modelMapper.map(documento, DocumentoDTO.class);
     }
 
-    public DocumentoDTO updateDocumento(Integer id, DocumentoDTO documentoDTO) {
+    public DocumentoDTO updateDocumento(Integer id, DocumentoDTO documentoRequestDTO) {
         Optional<Documento> optionalDocumento = documentoRepository.findById(id);
         if (optionalDocumento.isPresent()) {
             Documento documento = optionalDocumento.get();
-            documento.setTipo(documentoDTO.getTipo());
-            documento.setImagem(documentoDTO.getImagem());
+            documento.setTipo(documentoRequestDTO.getTipo());
+            documento.setImagem(documentoRequestDTO.getImagem());
             documentoRepository.save(documento);
 
             return modelMapper.map(documento, DocumentoDTO.class);

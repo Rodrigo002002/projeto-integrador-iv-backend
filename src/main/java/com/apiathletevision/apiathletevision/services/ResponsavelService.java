@@ -27,44 +27,44 @@ public class ResponsavelService {
 
     public Optional<ResponsavelDTO> getResponsavelById(UUID id) {
         Optional<Responsavel> responsavel = responsavelRepository.findById(id);
-        ResponsavelDTO responsavelDTO = modelMapper.map(responsavel, ResponsavelDTO.class);
-        return Optional.ofNullable(responsavelDTO);
+        ResponsavelDTO responsavelRequestDTO = modelMapper.map(responsavel, ResponsavelDTO.class);
+        return Optional.ofNullable(responsavelRequestDTO);
     }
 
-    public ResponsavelDTO createResponsavel(ResponsavelDTO responsavelDTO) {
+    public ResponsavelDTO createResponsavel(ResponsavelDTO responsavelRequestDTO) {
         Responsavel responsavel = new Responsavel();
-        String encryptedPassword = new BCryptPasswordEncoder().encode(responsavelDTO.getPassword());
+        String encryptedPassword = new BCryptPasswordEncoder().encode(responsavelRequestDTO.getPassword());
 
-        responsavel.setNome(responsavelDTO.getNome());
-        responsavel.setRole(responsavelDTO.getRole());
-        responsavel.setTelefone(responsavelDTO.getTelefone());
-        responsavel.setEmail(responsavelDTO.getEmail());
+        responsavel.setNome(responsavelRequestDTO.getNome());
+        responsavel.setRole(responsavelRequestDTO.getRole());
+        responsavel.setTelefone(responsavelRequestDTO.getTelefone());
+        responsavel.setEmail(responsavelRequestDTO.getEmail());
         responsavel.setPassword(encryptedPassword);
-        responsavel.setAlunos(alunoRepository.findAllById(responsavelDTO.getAlunosIds()));
-        responsavel.setRg(responsavelDTO.getRg());
-        responsavel.setCpf(responsavelDTO.getCpf());
+        responsavel.setAlunos(alunoRepository.findAllById(responsavelRequestDTO.getAlunosIds()));
+        responsavel.setRg(responsavelRequestDTO.getRg());
+        responsavel.setCpf(responsavelRequestDTO.getCpf());
 
         responsavel = responsavelRepository.save(responsavel);
 
         return modelMapper.map(responsavel, ResponsavelDTO.class);
     }
 
-    public ResponsavelDTO updateResponsavel(UUID id, ResponsavelDTO responsavelDTO) {
+    public ResponsavelDTO updateResponsavel(UUID id, ResponsavelDTO responsavelRequestDTO) {
         Optional<Responsavel> optionalResponsavel = responsavelRepository.findById(id);
         if (optionalResponsavel.isPresent()) {
             Responsavel responsavel = optionalResponsavel.get();
 
-            String encryptedPassword = new BCryptPasswordEncoder().encode(responsavelDTO.getPassword());
+            String encryptedPassword = new BCryptPasswordEncoder().encode(responsavelRequestDTO.getPassword());
 
             responsavel.setId(id);
-            responsavel.setNome(responsavelDTO.getNome());
-            responsavel.setRole(responsavelDTO.getRole());
-            responsavel.setTelefone(responsavelDTO.getTelefone());
-            responsavel.setEmail(responsavelDTO.getEmail());
+            responsavel.setNome(responsavelRequestDTO.getNome());
+            responsavel.setRole(responsavelRequestDTO.getRole());
+            responsavel.setTelefone(responsavelRequestDTO.getTelefone());
+            responsavel.setEmail(responsavelRequestDTO.getEmail());
             responsavel.setPassword(encryptedPassword);
-            responsavel.setAlunos(alunoRepository.findAllById(responsavelDTO.getAlunosIds()));
-            responsavel.setRg(responsavelDTO.getRg());
-            responsavel.setCpf(responsavelDTO.getCpf());
+            responsavel.setAlunos(alunoRepository.findAllById(responsavelRequestDTO.getAlunosIds()));
+            responsavel.setRg(responsavelRequestDTO.getRg());
+            responsavel.setCpf(responsavelRequestDTO.getCpf());
 
             responsavel = responsavelRepository.save(responsavel);
 

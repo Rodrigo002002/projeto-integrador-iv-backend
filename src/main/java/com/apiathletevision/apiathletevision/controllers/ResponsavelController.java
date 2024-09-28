@@ -20,15 +20,15 @@ public class ResponsavelController {
     private final ResponsavelService responsavelService;
 
     @PostMapping
-    public ResponseEntity<ResponsavelDTO> createResponsavel(@RequestBody ResponsavelDTO responsavelDTO) {
-        ResponsavelDTO responsavel = responsavelService.createResponsavel(responsavelDTO);
+    public ResponseEntity<ResponsavelDTO> createResponsavel(@RequestBody ResponsavelDTO responsavelRequestDTO) {
+        ResponsavelDTO responsavel = responsavelService.createResponsavel(responsavelRequestDTO);
 
         return new ResponseEntity<>(responsavel, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponsavelDTO> updateResponsavel(@PathVariable("id") UUID id, @RequestBody ResponsavelDTO responsavelDTO) {
-        ResponsavelDTO responsavel = responsavelService.updateResponsavel(id, responsavelDTO);
+    public ResponseEntity<ResponsavelDTO> updateResponsavel(@PathVariable("id") UUID id, @RequestBody ResponsavelDTO responsavelRequestDTO) {
+        ResponsavelDTO responsavel = responsavelService.updateResponsavel(id, responsavelRequestDTO);
 
         if (responsavel != null) {
             return new ResponseEntity<>(responsavel, HttpStatus.OK);

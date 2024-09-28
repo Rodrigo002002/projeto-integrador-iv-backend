@@ -23,28 +23,28 @@ public class ModalidadeService {
 
     public Optional<ModalidadeDTO> getModalidadeById(Integer id) {
         Optional<Modalidade> modalidade = modalidadeRepository.findById(id);
-        ModalidadeDTO modalidadeDTO = modelMapper.map(modalidade, ModalidadeDTO.class);
-        return Optional.ofNullable(modalidadeDTO);
+        ModalidadeDTO modalidadeRequestDTO = modelMapper.map(modalidade, ModalidadeDTO.class);
+        return Optional.ofNullable(modalidadeRequestDTO);
     }
 
-    public ModalidadeDTO createModalidade(ModalidadeDTO modalidadeDTO) {
+    public ModalidadeDTO createModalidade(ModalidadeDTO modalidadeRequestDTO) {
         Modalidade modalidade = new Modalidade();
 
-        modalidade.setNome(modalidadeDTO.getNome());
+        modalidade.setNome(modalidadeRequestDTO.getNome());
 
         modalidade = modalidadeRepository.save(modalidade);
 
         return modelMapper.map(modalidade, ModalidadeDTO.class);
     }
 
-    public ModalidadeDTO updateModalidade(Integer id, ModalidadeDTO modalidadeDTO) {
+    public ModalidadeDTO updateModalidade(Integer id, ModalidadeDTO modalidadeRequestDTO) {
         Optional<Modalidade> optionalModalidade = modalidadeRepository.findById(id);
 
         if (optionalModalidade.isPresent()) {
 
             Modalidade modalidade = optionalModalidade.get();
             modalidade.setId(id);
-            modalidade.setNome(modalidadeDTO.getNome());
+            modalidade.setNome(modalidadeRequestDTO.getNome());
 
             modalidade = modalidadeRepository.save(modalidade);
             return modelMapper.map(modalidade, ModalidadeDTO.class);

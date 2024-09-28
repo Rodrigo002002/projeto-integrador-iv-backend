@@ -31,13 +31,13 @@ public class DocumentoController {
     }
 
     @PostMapping
-    public DocumentoDTO createDocumento(@RequestBody DocumentoDTO documentoDTO) {
-        return documentoService.createDocumento(documentoDTO);
+    public DocumentoDTO createDocumento(@RequestBody DocumentoDTO documentoRequestDTO) {
+        return documentoService.createDocumento(documentoRequestDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DocumentoDTO> updateDocumento(@PathVariable("id") Integer id, @RequestBody DocumentoDTO documentoDTO) {
-        DocumentoDTO documento = documentoService.updateDocumento(id, documentoDTO);
+    public ResponseEntity<DocumentoDTO> updateDocumento(@PathVariable("id") Integer id, @RequestBody DocumentoDTO documentoRequestDTO) {
+        DocumentoDTO documento = documentoService.updateDocumento(id, documentoRequestDTO);
 
         if (documento != null) {
             return new ResponseEntity<>(documento, HttpStatus.OK);

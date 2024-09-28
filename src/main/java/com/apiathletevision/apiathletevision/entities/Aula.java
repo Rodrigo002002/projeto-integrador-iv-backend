@@ -32,6 +32,5 @@ public class Aula {
     private List<Aluno> alunosPresentes;
     
     @ManyToOne
-    @JoinColumn(name="turma_id")
     private Turma turma;
 }

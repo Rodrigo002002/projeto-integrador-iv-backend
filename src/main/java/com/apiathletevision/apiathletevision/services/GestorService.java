@@ -25,37 +25,37 @@ public class GestorService {
 
     public Optional<GestorDTO> getGestorById(UUID id) {
         Optional<Gestor> gestor = gestorRepository.findById(id);
-        GestorDTO gestorDTO = modelMapper.map(gestor, GestorDTO.class);
-        return Optional.ofNullable(gestorDTO);
+        GestorDTO gestorRequestDTO = modelMapper.map(gestor, GestorDTO.class);
+        return Optional.ofNullable(gestorRequestDTO);
     }
 
-    public GestorDTO createGestor(GestorDTO gestorDTO) {
+    public GestorDTO createGestor(GestorDTO gestorRequestDTO) {
         Gestor gestor = new Gestor();
 
-        gestor.setNome(gestorDTO.getNome());
-        gestor.setRole(gestorDTO.getRole());
-        gestor.setTelefone(gestorDTO.getTelefone());
-        gestor.setEmail(gestorDTO.getEmail());
-        gestor.setRg(gestorDTO.getRg());
-        gestor.setCpf(gestorDTO.getCpf());
+        gestor.setNome(gestorRequestDTO.getNome());
+        gestor.setRole(gestorRequestDTO.getRole());
+        gestor.setTelefone(gestorRequestDTO.getTelefone());
+        gestor.setEmail(gestorRequestDTO.getEmail());
+        gestor.setRg(gestorRequestDTO.getRg());
+        gestor.setCpf(gestorRequestDTO.getCpf());
 
         gestor = gestorRepository.save(gestor);
 
         return modelMapper.map(gestor, GestorDTO.class);
     }
 
-    public GestorDTO updateGestor(UUID id, GestorDTO gestorDTO) {
+    public GestorDTO updateGestor(UUID id, GestorDTO gestorRequestDTO) {
         Optional<Gestor> optionalGestor = gestorRepository.findById(id);
 
         if (optionalGestor.isPresent()) {
             Gestor gestor = optionalGestor.get();
             gestor.setId(id);
-            gestor.setNome(gestorDTO.getNome());
-            gestor.setRole(gestorDTO.getRole());
-            gestor.setTelefone(gestorDTO.getTelefone());
-            gestor.setEmail(gestorDTO.getEmail());
-            gestor.setRg(gestorDTO.getRg());
-            gestor.setCpf(gestorDTO.getCpf());
+            gestor.setNome(gestorRequestDTO.getNome());
+            gestor.setRole(gestorRequestDTO.getRole());
+            gestor.setTelefone(gestorRequestDTO.getTelefone());
+            gestor.setEmail(gestorRequestDTO.getEmail());
+            gestor.setRg(gestorRequestDTO.getRg());
+            gestor.setCpf(gestorRequestDTO.getCpf());
 
             gestor = gestorRepository.save(gestor);
 

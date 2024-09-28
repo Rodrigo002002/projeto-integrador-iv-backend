@@ -20,14 +20,14 @@ public class GestorController {
     private final GestorService gestorService;
 
     @PostMapping
-    public ResponseEntity<GestorDTO> createGestor(@RequestBody GestorDTO gestorDTO) {
-        GestorDTO gestor = gestorService.createGestor(gestorDTO);
+    public ResponseEntity<GestorDTO> createGestor(@RequestBody GestorDTO gestorRequestDTO) {
+        GestorDTO gestor = gestorService.createGestor(gestorRequestDTO);
         return new ResponseEntity<>(gestor, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GestorDTO> updateGestor(@PathVariable("id") UUID id, @RequestBody GestorDTO gestorDTO) {
-        GestorDTO gestor = gestorService.updateGestor(id, gestorDTO);
+    public ResponseEntity<GestorDTO> updateGestor(@PathVariable("id") UUID id, @RequestBody GestorDTO gestorRequestDTO) {
+        GestorDTO gestor = gestorService.updateGestor(id, gestorRequestDTO);
 
         if (gestor != null) {
             return new ResponseEntity<>(gestor, HttpStatus.OK);

@@ -32,14 +32,14 @@ public class PlanoController {
     }
 
     @PostMapping
-    public ResponseEntity<PlanoDTO> createPlano(@RequestBody PlanoDTO planoDTO) {
-        PlanoDTO plano = planoService.createPlano(planoDTO);
+    public ResponseEntity<PlanoDTO> createPlano(@RequestBody PlanoDTO planoRequestDTO) {
+        PlanoDTO plano = planoService.createPlano(planoRequestDTO);
         return new ResponseEntity<>(plano, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PlanoDTO> updatePlano(@PathVariable("id") Integer id, @RequestBody PlanoDTO planoDTO) {
-        PlanoDTO plano = planoService.updatePlano(id, planoDTO);
+    public ResponseEntity<PlanoDTO> updatePlano(@PathVariable("id") Integer id, @RequestBody PlanoDTO planoRequestDTO) {
+        PlanoDTO plano = planoService.updatePlano(id, planoRequestDTO);
 
         if (plano != null) {
             return new ResponseEntity<>(plano, HttpStatus.OK);
