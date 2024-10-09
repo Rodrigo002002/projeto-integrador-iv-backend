@@ -1,7 +1,7 @@
 package com.apiathletevision.apiathletevision.controllers;
 
-import com.apiathletevision.apiathletevision.dtos.TipoServicoDTO;
-import com.apiathletevision.apiathletevision.services.TipoServicoService;
+import com.apiathletevision.apiathletevision.dtos.entities.TipoServicoDTO;
+import com.apiathletevision.apiathletevision.services.impl.TipoServicoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

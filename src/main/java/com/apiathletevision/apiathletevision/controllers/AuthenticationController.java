@@ -1,104 +1,48 @@
 package com.apiathletevision.apiathletevision.controllers;
 
-import com.apiathletevision.apiathletevision.dtos.requests.AlunoRequestDTO;
-import com.apiathletevision.apiathletevision.dtos.ResponsavelDTO;
-import com.apiathletevision.apiathletevision.dtos.auth.AuthenticationDTO;
-import com.apiathletevision.apiathletevision.dtos.auth.LoginResponseDTO;
-import com.apiathletevision.apiathletevision.dtos.auth.RegisterAlunoDTO;
-import com.apiathletevision.apiathletevision.dtos.auth.RegisterResponsavelDTO;
-import com.apiathletevision.apiathletevision.entities.Usuario;
-import com.apiathletevision.apiathletevision.enums.UserRole;
-import com.apiathletevision.apiathletevision.repositories.UsuarioRepository;
-import com.apiathletevision.apiathletevision.services.AlunoService;
-import com.apiathletevision.apiathletevision.services.ResponsavelService;
-import com.apiathletevision.apiathletevision.services.TokenService;
+import com.apiathletevision.apiathletevision.dtos.groups.AppGroup;
+import com.apiathletevision.apiathletevision.dtos.jwt.JwtDTO;
+import com.apiathletevision.apiathletevision.dtos.jwt.JwtRefreshToken;
+import com.apiathletevision.apiathletevision.dtos.request.LoginRequestDTO;
+import com.apiathletevision.apiathletevision.services.AuthenticationService;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
-@RequestMapping("/api/auth")
-@RequiredArgsConstructor
-@Tag(name = "Auth")
+@Tag(name = "Login")
+@RequestMapping("${api-prefix}/auth")
+@AllArgsConstructor
 public class AuthenticationController {
 
-    private static final Logger log = LoggerFactory.getLogger(AuthenticationController.class);
-
     private final AuthenticationManager authenticationManager;
+    private final AuthenticationService authenticationService;
 
-    private final UsuarioRepository usuarioRepository;
-
-    private final AlunoService alunoService;
-
-    private final ResponsavelService responsavelService;
-
-    private final TokenService tokenService;
-
+    @JsonView(AppGroup.Response.class)
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data) {
+    public JwtDTO auth(
+            @RequestBody
+            @Validated(AppGroup.Request.class)
+            LoginRequestDTO loginRequestDTO) {
 
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
+        var usuarioAutenticationToken = new UsernamePasswordAuthenticationToken(
+                loginRequestDTO.getLogin(), loginRequestDTO.getPassword());
 
-        var auth = authenticationManager.authenticate(usernamePassword);
+        authenticationManager.authenticate(usuarioAutenticationToken);
 
-        var token = tokenService.generateToken((String) data.email());
-
-        Usuario usuario = usuarioRepository.findByEmail(data.email()).orElse(null);
-
-        return ResponseEntity.ok(
-                new LoginResponseDTO(
-                        token,
-                        usuario.getNome(),
-                        usuario.getEmail(),
-                        usuario.getRole()
-                )
-        );
+        return authenticationService.getAccessToken(loginRequestDTO);
     }
 
-    @PostMapping("/registrar/aluno")
-    public ResponseEntity alunoRegister(@RequestBody @Valid RegisterAlunoDTO data) {
-        if (usuarioRepository.findByEmail(data.email()).isPresent())
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        AlunoRequestDTO aluno = new AlunoRequestDTO();
-        aluno.setNome(data.nome());
-        aluno.setRole(UserRole.ALUNO);
-        aluno.setTelefone(data.telefone());
-        aluno.setEmail(data.email());
-        aluno.setPassword(data.password());
-        aluno.setDocumentosIds(data.documentosIds());
-        alunoService.createAluno(aluno);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PostMapping("/refresh-token")
+    public JwtDTO authRefreshToken(@RequestBody JwtRefreshToken jwtRefreshToken) {
+        return authenticationService.getRefreshToken(jwtRefreshToken.getRefreshToken());
     }
 
-    @PostMapping("/registrar/responsavel")
-    public ResponseEntity responsavelRegister(@RequestBody @Valid RegisterResponsavelDTO data) {
-        if (this.usuarioRepository.findByEmail(data.email()).isPresent())
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-
-        ResponsavelDTO responsavel = new ResponsavelDTO();
-        responsavel.setNome(data.nome());
-        responsavel.setRole(UserRole.RESPONSAVEL);
-        responsavel.setTelefone(data.telefone());
-        responsavel.setEmail(data.email());
-        responsavel.setPassword(data.password());
-        responsavelService.createResponsavel(responsavel);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }

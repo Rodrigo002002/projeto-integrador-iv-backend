@@ -1,7 +1,7 @@
 package com.apiathletevision.apiathletevision.controllers;
 
-import com.apiathletevision.apiathletevision.dtos.EquipeDTO;
-import com.apiathletevision.apiathletevision.services.EquipeService;
+import com.apiathletevision.apiathletevision.dtos.entities.EquipeDTO;
+import com.apiathletevision.apiathletevision.services.impl.EquipeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

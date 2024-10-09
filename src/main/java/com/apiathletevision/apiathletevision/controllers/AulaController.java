@@ -1,7 +1,7 @@
 package com.apiathletevision.apiathletevision.controllers;
 
-import com.apiathletevision.apiathletevision.dtos.AulaDTO;
-import com.apiathletevision.apiathletevision.services.AulaService;
+import com.apiathletevision.apiathletevision.dtos.entities.AulaDTO;
+import com.apiathletevision.apiathletevision.services.impl.AulaServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,29 +16,29 @@ import java.util.List;
 @Tag(name = "Aula")
 public class AulaController {
 
-    private final AulaService aulaService;
+    private final AulaServiceImpl aulaServiceImpl;
 
     @GetMapping
     public ResponseEntity<List<AulaDTO>> getAllAulas() {
-        List<AulaDTO> aulas = aulaService.getAllAulas();
+        List<AulaDTO> aulas = aulaServiceImpl.getAllAulas();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AulaDTO> getAulaById(@PathVariable("id") Integer id) {
-        return aulaService.getAulaById(id)
+        return aulaServiceImpl.getAulaById(id)
                 .map(aula -> new ResponseEntity<>(aula, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
     public AulaDTO createAula(@RequestBody AulaDTO aulaRequestDTO) {
-        return aulaService.createAula(aulaRequestDTO);
+        return aulaServiceImpl.createAula(aulaRequestDTO);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<AulaDTO> updateAula(@PathVariable("id") Integer id, @RequestBody AulaDTO aulaRequestDTO) {
-        AulaDTO aula = aulaService.updateAula(id, aulaRequestDTO);
+        AulaDTO aula = aulaServiceImpl.updateAula(id, aulaRequestDTO);
 
         if (aula != null) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -48,7 +48,7 @@ public class AulaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAula(@PathVariable("id") Integer id) {
-        aulaService.deleteAula(id);
+        aulaServiceImpl.deleteAula(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

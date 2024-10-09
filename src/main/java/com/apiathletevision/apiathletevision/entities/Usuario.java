@@ -23,26 +23,14 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private UUID id;
-
-    @Column(name = "nome")
+    private String login;
     private String nome;
-
-    @Column(name = "role")
     private UserRole role;
-
-    @Column(name = "telefone")
     private String telefone;
-
     @Column(name = "email", unique = true, nullable = false)
     private String email;
-
-    @Column(name = "password")
     private String password;
-
-    @Column(name = "rg")
     private String rg;
-
-    @Column(name = "cpf")
     private String cpf;
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
