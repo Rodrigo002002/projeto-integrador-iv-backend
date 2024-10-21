@@ -126,7 +126,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             return JWT.create()
                     .withIssuer(ISSUER)
-                    .withSubject(usuario.getEmail())
+                    .withSubject(usuario.getLogin())
                     .withExpiresAt(generateExpirationDate(expiration))
                     .sign(algorithm);
         } catch (JWTCreationException exception) {

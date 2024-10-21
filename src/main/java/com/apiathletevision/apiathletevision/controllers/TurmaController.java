@@ -1,55 +1,74 @@
 package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.entities.TurmaDTO;
-import com.apiathletevision.apiathletevision.services.impl.TurmaService;
+import com.apiathletevision.apiathletevision.dtos.groups.AppGroup;
+import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
+import com.apiathletevision.apiathletevision.entities.Turma;
+import com.apiathletevision.apiathletevision.services.TurmaService;
+import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+@Tag(name = "Turmas")
 @RestController
-@RequestMapping("/api/turma")
+@RequestMapping("${api-prefix}/turmas")
 @RequiredArgsConstructor
-@Tag(name = "Turma")
 public class TurmaController {
 
     private final TurmaService turmaService;
 
     @GetMapping
-    public ResponseEntity<List<TurmaDTO>> getAllTurmas() {
-        List<TurmaDTO> turmas = turmaService.getAllTurmas();
-        return new ResponseEntity<>(turmas, HttpStatus.OK);
+    @Operation(summary = "Listar", description = "Listar")
+    @JsonView(AppGroup.ResponsePage.class)
+    public ResponseEntity<PageDTO<Turma, TurmaDTO>> findAll(
+            @RequestParam(name = "pageNo", defaultValue = "0") int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(name = "search", required = false) String search
+    ) {
+        return ResponseEntity.ok(turmaService.findAll(pageNo, pageSize, search));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TurmaDTO> getTurmaById(@PathVariable("id") Integer id) {
-        return turmaService.getTurmaById(id)
-                .map(turma -> new ResponseEntity<>(turma, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<TurmaDTO> findById(@PathVariable("id") int id) throws BadRequestException {
+        return ResponseEntity.ok(turmaService.findById(id));
     }
 
+    @Operation(summary = "Cadastrar", description = "Cadastrar")
+    @JsonView({AppGroup.Response.class})
     @PostMapping
-    public ResponseEntity<TurmaDTO> createTurma(@RequestBody TurmaDTO turmaRequestDTO) {
-        TurmaDTO turma = turmaService.createTurma(turmaRequestDTO);
-        return new ResponseEntity<>(turma, HttpStatus.CREATED);
+    public ResponseEntity<TurmaDTO> create(
+            @Validated(AppGroup.Request.class)
+            @RequestBody
+            @JsonView(AppGroup.Request.class)
+            TurmaDTO turmaDTO
+    ) {
+        return ResponseEntity.ok(turmaService.create(turmaDTO));
     }
 
+    @Operation(summary = "Editar", description = "Editar")
     @PutMapping("/{id}")
-    public ResponseEntity<TurmaDTO> updateTurma(@PathVariable("id") Integer id, @RequestBody TurmaDTO turmaDTO) {
-        TurmaDTO turma = turmaService.updateTurma(id, turmaDTO);
+    public ResponseEntity<TurmaDTO> update(
+            @PathVariable("id") int id,
+            @Validated(AppGroup.Request.class)
+            @RequestBody
+            @JsonView(AppGroup.Request.class)
+            TurmaDTO turmaDTO
+    ) throws BadRequestException {
+        turmaDTO.setId(id);
 
-        if (turma != null) {
-            return new ResponseEntity<>(turma, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return ResponseEntity.ok(turmaService.update(turmaDTO));
     }
 
+    @Operation(summary = "Deletar", description = "Deletar")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTurma(@PathVariable("id") Integer id) {
-        turmaService.deleteTurma(id);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<Void> delete(@PathVariable("id") int id) throws BadRequestException {
+        turmaService.delete(id);
+
+        return ResponseEntity.ok().build();
     }
 }

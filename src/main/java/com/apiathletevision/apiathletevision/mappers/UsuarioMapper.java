@@ -8,13 +8,16 @@ import java.util.List;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UsuarioMapper {
+    // Converte de DTO para Entidade
+    Usuario toEntity(UsuarioDTO dto);
 
-    Usuario toEntity(UsuarioDTO usuarioDTO);
+    // Converte de Entidade para DTO
+    UsuarioDTO toDto(Usuario entity);
 
-    UsuarioDTO toDto(Usuario usuario);
+    // Converte lista de Entidades para lista de DTOs
+    List<UsuarioDTO> toDto(List<Usuario> entities);
 
-    List<UsuarioDTO> toDto(List<Usuario> usuario);
-
+    // Atualiza parcialmente uma entidade com os valores do DTO, ignorando propriedades nulas
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Usuario partialUpdate(UsuarioDTO usuarioDTO, @MappingTarget Usuario usuario);
+    Usuario partialUpdate(UsuarioDTO dto, @MappingTarget Usuario entity);
 }

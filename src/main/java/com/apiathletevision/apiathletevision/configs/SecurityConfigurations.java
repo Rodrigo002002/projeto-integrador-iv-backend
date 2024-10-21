@@ -1,6 +1,9 @@
 package com.apiathletevision.apiathletevision.configs;
 
-import com.apiathletevision.apiathletevision.filter.SecurityFilter;
+import com.apiathletevision.apiathletevision.components.filters.SecurityFilter;
+import com.apiathletevision.apiathletevision.exeptions.handlers.CustomAuthenticationEntryPoint;
+import com.apiathletevision.apiathletevision.helpers.PublicRoutes;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,27 +21,27 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfigurations {
-    @Autowired
-    SecurityFilter securityFilter;
+
+    private final SecurityFilter securityFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return  httpSecurity
+        return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/apí/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/registrar/aluno").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/registrar/responsavel").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/api-docs").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-
+                        .requestMatchers(PublicRoutes.PUBLIC_URLS).permitAll() // Rotas públicas definidas
+                        .requestMatchers(HttpMethod.POST, "/api/gestor/**").hasRole("GESTOR")
+                        .requestMatchers(HttpMethod.GET, "/api/gestor/**").hasRole("GESTOR")
+                        .requestMatchers(HttpMethod.PUT, "/api/gestor/**").hasRole("GESTOR")
+                        .requestMatchers(HttpMethod.DELETE, "/api/gestor/**").hasRole("GESTOR")
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -50,7 +53,7 @@ public class SecurityConfigurations {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

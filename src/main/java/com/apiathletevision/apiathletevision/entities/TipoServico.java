@@ -19,4 +19,6 @@ public class TipoServico {
 
     @Column(name = "preco")
     private Double preco;
+
+    private Boolean status;
 }

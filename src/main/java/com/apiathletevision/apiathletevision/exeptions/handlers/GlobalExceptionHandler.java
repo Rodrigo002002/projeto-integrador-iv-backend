@@ -1,9 +1,9 @@
 package com.apiathletevision.apiathletevision.exeptions.handlers;
 
-import com.gti.sgr.exeptions.BadRequestException;
-import com.gti.sgr.exeptions.ForbiddenException;
-import com.gti.sgr.exeptions.ResourceNotFoundException;
-import com.gti.sgr.exeptions.RestErrorMessage;
+import com.apiathletevision.apiathletevision.exeptions.BadRequestException;
+import com.apiathletevision.apiathletevision.exeptions.ForbiddenException;
+import com.apiathletevision.apiathletevision.exeptions.ResourceNotFoundException;
+import com.apiathletevision.apiathletevision.exeptions.RestErrorMessage;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

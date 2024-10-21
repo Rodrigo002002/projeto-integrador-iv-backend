@@ -1,58 +1,101 @@
 package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.entities.AlunoDTO;
-import com.apiathletevision.apiathletevision.dtos.responses.AlunoResponseDTO;
-import com.apiathletevision.apiathletevision.services.impl.AlunoServiceImpl;
+import com.apiathletevision.apiathletevision.dtos.groups.AppGroup;
+import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
+import com.apiathletevision.apiathletevision.dtos.select2.Select2OptionsDTO;
+import com.apiathletevision.apiathletevision.entities.Aluno;
+import com.apiathletevision.apiathletevision.services.AlunoService;
+import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+@Tag(name = "Alunos")
 @RestController
-@RequestMapping("/api/aluno")
+@RequestMapping("${api-prefix}/alunos")
 @RequiredArgsConstructor
-@Tag(name = "Aluno")
 public class AlunoController {
 
-    private final AlunoServiceImpl alunoServiceImpl;
+    private final AlunoService alunoService;
 
-    @PostMapping
-    public ResponseEntity<AlunoResponseDTO> createAluno(@RequestBody AlunoDTO alunoDTO) {
-        AlunoResponseDTO aluno = alunoServiceImpl.createAluno(alunoDTO);
-
-        return new ResponseEntity<>(aluno, HttpStatus.CREATED);
+    @GetMapping
+    @Operation(summary = "Listar", description = "Listar")
+    @JsonView(AppGroup.ResponsePage.class)
+    public ResponseEntity<PageDTO<Aluno, AlunoDTO>> findAll(
+            @RequestParam(name = "pageNo", defaultValue = "0") int pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(name = "search", required = false) String search,
+            @RequestParam(name = "status", required = false) Boolean status
+    ) {
+        return ResponseEntity.ok(alunoService.findAll(pageNo, pageSize, search, status));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<AlunoResponseDTO> updateAluno(@PathVariable("id") UUID id, @RequestBody AlunoDTO alunoDTO) {
-        AlunoResponseDTO aluno = alunoServiceImpl.updateAluno(id, alunoDTO);
-
-        if (aluno != null) {
-            return new ResponseEntity<>(aluno, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAluno(@PathVariable("id") UUID id) {
-        alunoServiceImpl.deleteAluno(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @Operation(summary = "Pesquisar", description = "Pesquisar alunos para Select2", tags = {"Select2"})
+    @GetMapping("/select2")
+    public ResponseEntity<List<Select2OptionsDTO>> findAllToSelect2(
+            @RequestParam(name = "q", required = false, defaultValue = "") String searchTerm
+    ) {
+        return ResponseEntity.ok(alunoService.findAllToSelect2(searchTerm));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AlunoResponseDTO> getAlunoById(@PathVariable("id") UUID id) {
-        return alunoServiceImpl.getAlunoById(id)
-                .map(aluno -> new ResponseEntity<>(aluno, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<AlunoDTO> findById(@PathVariable("id") UUID id) throws BadRequestException {
+        return ResponseEntity.ok(alunoService.findById(id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<AlunoResponseDTO>> getAllAlunos() {
-        List<AlunoResponseDTO> alunos = alunoServiceImpl.getAllAlunos();
-        return new ResponseEntity<>(alunos, HttpStatus.OK);
+    @Operation(summary = "Cadastrar", description = "Cadastrar")
+    @JsonView({AppGroup.Response.class})
+    @PostMapping
+    public ResponseEntity<AlunoDTO> create(
+            @Validated(AppGroup.Request.class)
+            @RequestBody
+            @JsonView(AppGroup.Request.class)
+            AlunoDTO alunoDTO
+    ) {
+        return ResponseEntity.ok(alunoService.create(alunoDTO));
+    }
+
+    @Operation(summary = "Editar", description = "Editar")
+    @PutMapping("/{id}")
+    public ResponseEntity<AlunoDTO> update(
+            @PathVariable("id") UUID id,
+            @Validated(AppGroup.Request.class)
+            @RequestBody
+            @JsonView(AppGroup.Request.class)
+            AlunoDTO alunoDTO
+    ) throws BadRequestException {
+        alunoDTO.setId(id);
+
+        return ResponseEntity.ok(alunoService.update(alunoDTO));
+    }
+
+    @Operation(summary = "Deletar", description = "Deletar")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") UUID id) throws BadRequestException {
+        alunoService.delete(id);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Ativar", description = "Ativar aluno")
+    @PutMapping({"/{id}/ativar"})
+    public ResponseEntity<?> enable(@PathVariable("id") UUID id) {
+        this.alunoService.changeStatus(id, true);
+        return ResponseEntity.ok(null);
+    }
+
+    @Operation(summary = "Desativar", description = "Desativar aluno")
+    @PutMapping({"/{id}/desativar"})
+    public ResponseEntity<?> disable(@PathVariable("id") UUID id) {
+        this.alunoService.changeStatus(id, false);
+        return ResponseEntity.ok(null);
     }
 }

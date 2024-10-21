@@ -1,0 +1,48 @@
+spring:
+  mvc:
+    contentnegotiation:
+      favor-path-extension: false
+      favor-parameter: false
+      ignore-unknown-path-extensions: true
+      ignore-accept-header: false
+      media-types:
+        json: application/json
+        xml: application/xml
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  application:
+    name: athletevision-api
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/athletevision?currentSchema=public
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+server:
+  port: 8888
+
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:fba927a58b0952af9234be3b8a576b8f}
+      accessTokenExpiration: 2
+      refreshTokenExpiration: 8
+
+api-prefix: /api

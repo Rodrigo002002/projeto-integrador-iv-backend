@@ -14,6 +14,7 @@ public class Modalidade {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "nome")
     private String nome;
+
+    private Boolean status;
 }

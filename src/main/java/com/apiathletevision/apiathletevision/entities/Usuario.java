@@ -4,6 +4,7 @@ import com.apiathletevision.apiathletevision.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,15 +24,26 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private UUID id;
+
     private String login;
+
     private String nome;
+
     private UserRole role;
+
     private String telefone;
+
     @Column(name = "email", unique = true, nullable = false)
     private String email;
+
     private String password;
+
     private String rg;
+
     private String cpf;
+
+    @ColumnDefault("true")
+    private Boolean status;
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (this.role == UserRole.GESTOR) return List.of(

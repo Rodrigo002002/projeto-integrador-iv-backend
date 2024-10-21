@@ -3,6 +3,7 @@ package com.apiathletevision.apiathletevision.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.List;
 
@@ -17,9 +18,15 @@ public class Equipe {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "nome")
     private String nome;
 
     @ManyToMany
+    @JoinTable(
+            name = "equipe_aluno_aluno",
+            joinColumns = @JoinColumn(name = "equipe_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "aluno_id", referencedColumnName = "id"))
     private List<Aluno> alunos;
+
+    @ColumnDefault("true")
+    private Boolean status;
 }

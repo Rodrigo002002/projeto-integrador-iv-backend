@@ -3,8 +3,9 @@ package com.apiathletevision.apiathletevision.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -16,13 +17,11 @@ public class Pagamento {
     @Column(name = "id")
     private Integer id;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "dataPagamento")
-    private Date dataPagamento;
+    @Column(name = "data_pagamento")
+    private LocalDate dataPagamento;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "dataPrazo")
-    private Date dataPrazo;
+    @Column(name = "data_prazo")
+    private LocalDate dataPrazo;
 
     @Column(name = "valor")
     private Double valor;
@@ -33,6 +32,12 @@ public class Pagamento {
     @ManyToOne(cascade = CascadeType.ALL)
     private Servico servico;
 
-    @Column(name = "pago")
+    @OneToOne
+    @JoinColumn(name = "aluno_id", referencedColumnName = "id")
+    private Aluno aluno;
+
     private Boolean pago;
+
+    @ColumnDefault("true")
+    private Boolean status;
 }

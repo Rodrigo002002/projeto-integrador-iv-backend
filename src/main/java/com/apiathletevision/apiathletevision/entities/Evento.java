@@ -1,6 +1,7 @@
 package com.apiathletevision.apiathletevision.entities;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -17,19 +18,22 @@ public class Evento {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "descricao")
     private String descricao;
 
-    @Column(name = "nome")
     private String nome;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "data")
-    private Date data;
+    private LocalDate data;
 
     @ManyToMany
+    @JoinTable(
+            name = "evento_equipe_equipe",
+            joinColumns = @JoinColumn(name = "evento_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "equipe_id", referencedColumnName = "id"))
     private List<Equipe> equipes;
 
     @ManyToOne
+    @JoinColumn(name = "modalidade_id", referencedColumnName = "id")
     private Modalidade modalidade;
+
+    private Boolean status;
 }

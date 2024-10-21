@@ -1,10 +1,10 @@
 package com.apiathletevision.apiathletevision.entities;
 
-import java.util.List;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,21 +16,19 @@ public class Plano {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "nome")
     private String nome;
 
-    @Column(name = "tipo")
     private String tipo;
 
-    @Column(name = "beneficio")
     private List<String> beneficios;
 
-    @Column(name = "preco")
-    private Double preco;
+    private double preco;
 
     @ManyToMany
     private List<Modalidade> modalidades;
 
     @OneToMany
     private List<Pagamento> pagamentos;
+
+    private Boolean status;
 }

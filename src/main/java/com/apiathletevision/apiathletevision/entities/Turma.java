@@ -6,10 +6,10 @@ import lombok.Setter;
 
 import java.util.List;
 
+@Table(name = "turmas")
 @Entity
 @Getter
 @Setter
-@Table(name = "turmas")
 public class Turma {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,15 +17,19 @@ public class Turma {
     private Integer id;
 
     @ManyToOne
+    @JoinColumn(name = "modalidade_id", referencedColumnName = "id")
     private Modalidade modalidade;
 
-    @OneToMany(mappedBy = "turma", targetEntity = Aula.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "aula_id", referencedColumnName = "id")
     private List<Aula> aulas;
 
-    @OneToMany(mappedBy = "turma", targetEntity = Aluno.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "aluno_id", referencedColumnName = "id")
     private List<Aluno> alunos;
 
     @ManyToOne
+    @JoinColumn(name = "professor_id", referencedColumnName = "id")
     private Professor professor;
 
     @Column(name = "periodo")
