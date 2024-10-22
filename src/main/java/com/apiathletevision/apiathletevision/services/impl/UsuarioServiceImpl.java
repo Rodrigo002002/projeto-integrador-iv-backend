@@ -12,9 +12,6 @@ import com.apiathletevision.apiathletevision.services.specifications.UsuarioSpec
 import io.micrometer.common.util.StringUtils;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -116,15 +113,11 @@ public class UsuarioServiceImpl implements UsuarioService {
             list = usuarioRepository.findByStatusIsTrueAndNomeContainingIgnoreCaseOrderByNome(searchTerm);
         }
 
-        return list
-                .stream()
-                .map(data -> new Select2OptionsDTO(data.getId(), data.getNome()))
-                .collect(Collectors.toList());
+        return list.stream().map(data -> new Select2OptionsDTO(data.getId(), data.getNome())).collect(Collectors.toList());
 
     }
 
     private Usuario getUsuario(UUID id) throws BadRequestException {
-        return usuarioRepository.findById(id).orElseThrow(()
-                -> new BadRequestException("Usuário com o ID: " + id + " não encontrado"));
+        return usuarioRepository.findById(id).orElseThrow(() -> new BadRequestException("Usuário com o ID: " + id + " não encontrado"));
     }
 }

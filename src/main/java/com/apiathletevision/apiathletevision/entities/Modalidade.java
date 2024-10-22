@@ -3,6 +3,7 @@ package com.apiathletevision.apiathletevision.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -16,5 +17,6 @@ public class Modalidade {
 
     private String nome;
 
+    @ColumnDefault("true")
     private Boolean status;
 }

@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -22,10 +23,10 @@ public class Servico {
     @JoinColumn(name = "tipoServico_id", referencedColumnName = "id")
     private TipoServico tipoServico;
 
-    @Temporal(TemporalType.DATE)
-    private Date data;
+    private LocalDate data;
 
     @OneToMany
+    @JoinColumn(name = "pagamento_id", referencedColumnName = "id")
     private List<Pagamento> pagamentos;
 
     @ManyToOne

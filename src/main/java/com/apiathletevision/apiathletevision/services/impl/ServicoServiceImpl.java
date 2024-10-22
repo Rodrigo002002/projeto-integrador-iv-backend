@@ -11,7 +11,7 @@ import com.apiathletevision.apiathletevision.repositories.*;
 import com.apiathletevision.apiathletevision.services.ServicoService;
 import com.apiathletevision.apiathletevision.services.specifications.ServicoSpecification;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ServicoServiceImpl implements ServicoService {
 
     private final ServicoRepository servicoRepository;
@@ -64,9 +64,9 @@ public class ServicoServiceImpl implements ServicoService {
     public ServicoDTO update(ServicoDTO servicoDTO) throws BadRequestException {
         Servico servico = getServico(servicoDTO.getId());
 
-        setCreateAssociations(servicoDTO, servico);
-
         servicoMapper.partialUpdate(servicoDTO, servico);
+
+        setCreateAssociations(servicoDTO, servico);
 
         servico = servicoRepository.save(servico);
         return servicoMapper.toDto(servico);

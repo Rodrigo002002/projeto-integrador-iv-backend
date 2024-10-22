@@ -60,11 +60,10 @@ public class ResponsavelServiceImpl implements ResponsavelService {
     public ResponsavelDTO update(ResponsavelDTO responsavelDTO) throws BadRequestException {
         Responsavel responsavel = getResponsavel(responsavelDTO.getId());
         String encryptedPassword = new BCryptPasswordEncoder().encode(responsavelDTO.getPassword());
-        responsavel.setPassword(encryptedPassword);
-
-        setCreateAssociations(responsavelDTO, responsavel);
-
         responsavelMapper.partialUpdate(responsavelDTO, responsavel);
+
+        responsavel.setPassword(encryptedPassword);
+        setCreateAssociations(responsavelDTO, responsavel);
 
         responsavel = responsavelRepository.save(responsavel);
         return responsavelMapper.toDto(responsavel);

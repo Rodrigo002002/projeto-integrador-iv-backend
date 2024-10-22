@@ -9,7 +9,7 @@ import com.apiathletevision.apiathletevision.repositories.GestorRepository;
 import com.apiathletevision.apiathletevision.services.GestorService;
 import com.apiathletevision.apiathletevision.services.specifications.GestorSpecification;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class GestorServiceImpl implements GestorService {
 
     private final GestorRepository gestorRepository;
@@ -54,9 +54,9 @@ public class GestorServiceImpl implements GestorService {
     public GestorDTO update(GestorDTO gestorDTO) throws BadRequestException {
         Gestor gestor = getGestor(gestorDTO.getId());
         String encryptedPassword = new BCryptPasswordEncoder().encode(gestorDTO.getPassword());
-        gestor.setPassword(encryptedPassword);
 
         gestorMapper.partialUpdate(gestorDTO, gestor);
+        gestor.setPassword(encryptedPassword);
 
         gestor = gestorRepository.save(gestor);
         return gestorMapper.toDto(gestor);

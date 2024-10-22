@@ -56,7 +56,9 @@ public class TipoServicoServiceImpl implements TipoServicoService {
     public TipoServicoDTO update(TipoServicoDTO tipoServicoDTO) throws BadRequestException {
         TipoServico tipoServico = getTipoServico(tipoServicoDTO.getId());
         tipoServicoMapper.partialUpdate(tipoServicoDTO, tipoServico);
+
         tipoServico = tipoServicoRepository.save(tipoServico);
+
         return tipoServicoMapper.toDto(tipoServico);
     }
 

@@ -95,7 +95,7 @@ public class AlunoServiceImpl implements AlunoService {
         if (!aluno.getStatus()) {
             alunoRepository.delete(aluno);
         }
-        throw new BadRequestException("Gestor ainda ativo");
+        throw new BadRequestException("Aluno ainda ativo");
     }
 
     @Override

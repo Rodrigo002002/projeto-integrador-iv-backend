@@ -15,7 +15,7 @@ import com.apiathletevision.apiathletevision.repositories.ServicoRepository;
 import com.apiathletevision.apiathletevision.services.PagamentoService;
 import com.apiathletevision.apiathletevision.services.specifications.PagamentoSpecification;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class PagamentoServiceImpl implements PagamentoService {
 
     private final PagamentoRepository pagamentoRepository;

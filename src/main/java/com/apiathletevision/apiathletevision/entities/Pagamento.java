@@ -27,9 +27,11 @@ public class Pagamento {
     private Double valor;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "plano_id", referencedColumnName = "id")
     private Plano plano;
 
     @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "servico_id", referencedColumnName = "id")
     private Servico servico;
 
     @OneToOne

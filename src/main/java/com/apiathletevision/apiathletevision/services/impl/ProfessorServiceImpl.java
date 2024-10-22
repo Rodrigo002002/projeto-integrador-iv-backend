@@ -70,11 +70,11 @@ public class ProfessorServiceImpl implements ProfessorService {
     public ProfessorDTO update(ProfessorDTO professorDTO) throws BadRequestException {
         Professor professor = getProfessor(professorDTO.getId());
         String encryptedPassword = new BCryptPasswordEncoder().encode(professorDTO.getPassword());
-        professor.setPassword(encryptedPassword);
-
-        setCreateAssociations(professorDTO, professor);
 
         professorMapper.partialUpdate(professorDTO, professor);
+
+        professor.setPassword(encryptedPassword);
+        setCreateAssociations(professorDTO, professor);
 
         professor = professorRepository.save(professor);
 

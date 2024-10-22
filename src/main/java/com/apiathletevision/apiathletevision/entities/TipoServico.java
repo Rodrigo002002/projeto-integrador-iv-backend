@@ -3,6 +3,7 @@ package com.apiathletevision.apiathletevision.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -20,5 +21,6 @@ public class TipoServico {
     @Column(name = "preco")
     private Double preco;
 
+    @ColumnDefault("true")
     private Boolean status;
 }
