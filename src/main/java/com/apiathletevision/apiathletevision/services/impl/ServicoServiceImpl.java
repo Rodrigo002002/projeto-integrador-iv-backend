@@ -111,19 +111,8 @@ public class ServicoServiceImpl implements ServicoService {
             servico.setTipoServico(tipoServico.orElse(null));
         }
 
-        if (!servicoDTO.getPagamentos().isEmpty()) {
-            List<Pagamento> pagamentos = servicoDTO.getPagamentos()
-                    .stream()
-                    .map(pagamentoDTO -> {
-                                if (pagamentoDTO.getId() != null) {
-                                    Optional<Pagamento> documento = pagamentoRepository.findById(pagamentoDTO.getId());
-                                    return documento.orElse(null);
-                                }
-                                return pagamentoRepository.save(
-                                        pagamentoMapper.toEntity(pagamentoDTO)
-                                );
-                            }
-                    ).toList();
+        if (!servicoDTO.getPagamentoIds().isEmpty()) {
+            List<Pagamento> pagamentos = pagamentoRepository.findAllById(servicoDTO.getPagamentoIds());
 
             servico.setPagamentos(pagamentos);
         }

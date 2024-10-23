@@ -15,12 +15,13 @@ public class TipoServico {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "tipo")
+    @Column(name = "tipo", nullable = false)
     private String tipo;
 
-    @Column(name = "preco")
+    @Column(name = "preco", nullable = false)
     private Double preco;
 
+    @Column(name = "status", nullable = false)
     @ColumnDefault("true")
     private Boolean status;
 }

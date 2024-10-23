@@ -5,16 +5,8 @@ import com.apiathletevision.apiathletevision.entities.Servico;
 import com.apiathletevision.apiathletevision.entities.TipoServico;
 import com.apiathletevision.apiathletevision.repositories.TipoServicoRepository;
 import org.mapstruct.*;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.repository.query.FluentQuery;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ServicoMapper {

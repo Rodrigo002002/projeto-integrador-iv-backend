@@ -27,5 +27,11 @@ public class AlunoDTO extends UsuarioDTO {
     private Integer planoId;
 
     @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class})
+    private List<ServicoDTO> servicos;
+
+    @JsonView({AppGroup.Request.class})
+    private List<Integer> servicosIds;
+
+    @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class})
     private List<PagamentoDTO> pagamentos;
 }

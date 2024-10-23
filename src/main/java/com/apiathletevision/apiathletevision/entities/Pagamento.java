@@ -1,5 +1,8 @@
 package com.apiathletevision.apiathletevision.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +14,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Table(name = "pagamentos")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Pagamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,16 +30,13 @@ public class Pagamento {
     @Column(name = "valor")
     private Double valor;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "plano_id", referencedColumnName = "id")
+    @ManyToOne
     private Plano plano;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "servico_id", referencedColumnName = "id")
+    @ManyToOne
     private Servico servico;
 
     @OneToOne
-    @JoinColumn(name = "aluno_id", referencedColumnName = "id")
     private Aluno aluno;
 
     private Boolean pago;

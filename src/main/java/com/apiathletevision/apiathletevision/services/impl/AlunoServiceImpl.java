@@ -3,17 +3,11 @@ package com.apiathletevision.apiathletevision.services.impl;
 import com.apiathletevision.apiathletevision.dtos.entities.AlunoDTO;
 import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
 import com.apiathletevision.apiathletevision.dtos.select2.Select2OptionsDTO;
-import com.apiathletevision.apiathletevision.entities.Aluno;
-import com.apiathletevision.apiathletevision.entities.Documento;
-import com.apiathletevision.apiathletevision.entities.Plano;
-import com.apiathletevision.apiathletevision.entities.Turma;
+import com.apiathletevision.apiathletevision.entities.*;
 import com.apiathletevision.apiathletevision.exeptions.BadRequestException;
 import com.apiathletevision.apiathletevision.mappers.AlunoMapper;
 import com.apiathletevision.apiathletevision.mappers.DocumentoMapper;
-import com.apiathletevision.apiathletevision.repositories.AlunoRepository;
-import com.apiathletevision.apiathletevision.repositories.DocumentoRepository;
-import com.apiathletevision.apiathletevision.repositories.PlanoRepository;
-import com.apiathletevision.apiathletevision.repositories.TurmaRepository;
+import com.apiathletevision.apiathletevision.repositories.*;
 import com.apiathletevision.apiathletevision.services.AlunoService;
 import com.apiathletevision.apiathletevision.services.specifications.AlunoSpecification;
 import io.micrometer.common.util.StringUtils;
@@ -44,6 +38,7 @@ public class AlunoServiceImpl implements AlunoService {
     private final PlanoRepository planoRepository;
     private final AlunoMapper alunoMapper;
     private final DocumentoMapper documentoMapper;
+    private final ServicoRepository servicoRepository;
 
     @Override
     public PageDTO<Aluno, AlunoDTO> findAll(int pageNo, int pageSize, String search, Boolean status) {
@@ -138,6 +133,11 @@ public class AlunoServiceImpl implements AlunoService {
         if (alunoDTO.getPlano() != null) {
             Optional<Plano> plano = planoRepository.findById(alunoDTO.getPlanoId());
             aluno.setPlano(plano.orElse(null));
+        }
+
+        if (!alunoDTO.getServicosIds().isEmpty()) {
+            List<Servico> servicos = servicoRepository.findAllById(alunoDTO.getServicosIds());
+            aluno.setServicos(servicos);
         }
 
         if (!alunoDTO.getDocumentos().isEmpty()) {

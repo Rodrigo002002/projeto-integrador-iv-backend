@@ -3,6 +3,8 @@ package com.apiathletevision.apiathletevision.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Entity
 @Getter
@@ -11,12 +13,11 @@ import lombok.Setter;
 public class Documento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
 
     @Column(name = "tipo")
     private String tipo;
 
-    @Column(name = "imagem")
+    @Column(name = "imagem", length = 2000000)
     private String imagem;
 }

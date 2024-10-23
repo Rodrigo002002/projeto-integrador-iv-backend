@@ -1,5 +1,8 @@
 package com.apiathletevision.apiathletevision.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "servicos")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Servico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,23 +24,23 @@ public class Servico {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "tipoServico_id", referencedColumnName = "id")
     private TipoServico tipoServico;
 
+    @Column(name = "data", nullable = false)
     private LocalDate data;
 
     @OneToMany
-    @JoinColumn(name = "pagamento_id", referencedColumnName = "id")
+    @JoinColumn(name = "pagamento_id")
     private List<Pagamento> pagamentos;
 
     @ManyToOne
-    @JoinColumn(name = "professor_id", referencedColumnName = "id")
     private Professor professor;
 
     @ManyToOne
-    @JoinColumn(name = "aluno_id", referencedColumnName = "id")
+    @JoinColumn(name = "aluno_id")
     private Aluno aluno;
 
+    @Column(name = "status", nullable = false)
     @ColumnDefault("true")
     private Boolean status;
 }

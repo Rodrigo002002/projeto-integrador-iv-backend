@@ -17,21 +17,16 @@ public class Turma {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "modalidade_id", referencedColumnName = "id")
     private Modalidade modalidade;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "aula_id", referencedColumnName = "id")
+    @OneToMany
     private List<Aula> aulas;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "aluno_id", referencedColumnName = "id")
+    @OneToMany
     private List<Aluno> alunos;
 
     @ManyToOne
-    @JoinColumn(name = "professor_id", referencedColumnName = "id")
     private Professor professor;
 
-    @Column(name = "periodo")
     private String periodo;
 }

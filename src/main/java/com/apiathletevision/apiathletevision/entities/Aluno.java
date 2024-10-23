@@ -1,6 +1,9 @@
 package com.apiathletevision.apiathletevision.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,18 +16,17 @@ import java.util.List;
 public class Aluno extends Usuario {
 
     @ManyToOne
-    @JoinColumn(name = "turma_id", referencedColumnName = "id")
     private Turma turma;
 
     @ManyToOne
-    @JoinColumn(name = "plano_id", referencedColumnName = "id")
     private Plano plano;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "documento_id", referencedColumnName = "id")
+    @OneToMany
+    private List<Servico> servicos;
+
+    @OneToMany
     private List<Documento> documentos;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "pagamento_id", referencedColumnName = "id")
+    @OneToMany
     private List<Pagamento> pagamentos;
 }
