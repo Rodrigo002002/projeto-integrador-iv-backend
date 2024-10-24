@@ -31,7 +31,7 @@ public class Evento {
     private List<Equipe> equipes;
 
     @ManyToOne
-    @JoinColumn(name = "modalidade_id", referencedColumnName = "id")
+    @JoinColumn(name = "modalidade_id")
     private Modalidade modalidade;
 
     private Boolean status;

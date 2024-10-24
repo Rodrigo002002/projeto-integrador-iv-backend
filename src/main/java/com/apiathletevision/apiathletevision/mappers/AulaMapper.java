@@ -15,7 +15,7 @@ public interface AulaMapper {
     AulaDTO toDto(Aula entity);
 
     // Converte lista de Entidades para lista de DTOs
-    List<AulaDTO> toDto(List<Aula> entities);
+    List<AulaDTO> toDtoList(List<Aula> entities);
 
     // Atualiza parcialmente uma entidade com os valores do DTO, ignorando propriedades nulas
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

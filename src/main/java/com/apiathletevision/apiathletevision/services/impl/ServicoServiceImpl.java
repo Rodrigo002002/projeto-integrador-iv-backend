@@ -1,5 +1,6 @@
 package com.apiathletevision.apiathletevision.services.impl;
 
+import com.apiathletevision.apiathletevision.dtos.entities.PagamentoDTO;
 import com.apiathletevision.apiathletevision.dtos.entities.ServicoDTO;
 import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
 import com.apiathletevision.apiathletevision.dtos.select2.Select2OptionsDTO;
@@ -89,6 +90,15 @@ public class ServicoServiceImpl implements ServicoService {
     }
 
     @Override
+    public List<PagamentoDTO> findAllPagamentoByServicoId(int id) {
+        List<Pagamento> pagamentos = pagamentoRepository.findAllByServico_id(id);
+        if (pagamentos.isEmpty()) {
+            throw new BadRequestException("Nenhum pagamento encontrado");
+        }
+        return pagamentoMapper.toDtoList(pagamentos);
+    }
+
+    @Override
     public List<Select2OptionsDTO> findAllToSelect2(String searchTerm) {
         List<Servico> list;
 
@@ -109,12 +119,6 @@ public class ServicoServiceImpl implements ServicoService {
         if (servicoDTO.getTipoServicoId() != null) {
             Optional<TipoServico> tipoServico = tipoServicoRepository.findById(servicoDTO.getTipoServicoId());
             servico.setTipoServico(tipoServico.orElse(null));
-        }
-
-        if (!servicoDTO.getPagamentoIds().isEmpty()) {
-            List<Pagamento> pagamentos = pagamentoRepository.findAllById(servicoDTO.getPagamentoIds());
-
-            servico.setPagamentos(pagamentos);
         }
 
         if (servicoDTO.getProfessorId() != null) {

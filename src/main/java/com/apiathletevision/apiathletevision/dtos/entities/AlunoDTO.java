@@ -11,12 +11,6 @@ import java.util.List;
 @Setter
 public class AlunoDTO extends UsuarioDTO {
 
-    @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class})
-    private TurmaDTO turma;
-
-    @JsonView({AppGroup.Request.class})
-    private Integer turmaId;
-
     @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class, AppGroup.Request.class})
     private List<DocumentoDTO> documentos;
 
@@ -25,13 +19,4 @@ public class AlunoDTO extends UsuarioDTO {
 
     @JsonView({AppGroup.Request.class})
     private Integer planoId;
-
-    @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class})
-    private List<ServicoDTO> servicos;
-
-    @JsonView({AppGroup.Request.class})
-    private List<Integer> servicosIds;
-
-    @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class})
-    private List<PagamentoDTO> pagamentos;
 }

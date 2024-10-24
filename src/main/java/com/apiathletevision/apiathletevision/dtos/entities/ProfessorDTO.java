@@ -16,10 +16,4 @@ public class ProfessorDTO extends UsuarioDTO {
 
     @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class, AppGroup.Request.class})
     private List<DocumentoDTO> documentos;
-
-    @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class})
-    private List<ServicoDTO> servicos;
-
-    @JsonView({AppGroup.Request.class})
-    private List<Integer> servicosIds;
 }

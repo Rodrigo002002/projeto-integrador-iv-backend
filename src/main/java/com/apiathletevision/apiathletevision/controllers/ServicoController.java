@@ -1,5 +1,6 @@
 package com.apiathletevision.apiathletevision.controllers;
 
+import com.apiathletevision.apiathletevision.dtos.entities.PagamentoDTO;
 import com.apiathletevision.apiathletevision.dtos.entities.ServicoDTO;
 import com.apiathletevision.apiathletevision.dtos.groups.AppGroup;
 import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
@@ -96,5 +97,11 @@ public class ServicoController {
     public ResponseEntity<?> disable(@PathVariable("id") int id) {
         this.servicoService.changeStatus(id, false);
         return ResponseEntity.ok(null);
+    }
+
+    @Operation(summary = "Pagamentos", description = "Buscar pagamentos")
+    @GetMapping("/{id}/pagamentos")
+    public ResponseEntity<List<PagamentoDTO>> findAllPagamentoByServicoId(@PathVariable("id") int id) throws BadRequestException {
+        return ResponseEntity.ok(servicoService.findAllPagamentoByServicoId(id));
     }
 }

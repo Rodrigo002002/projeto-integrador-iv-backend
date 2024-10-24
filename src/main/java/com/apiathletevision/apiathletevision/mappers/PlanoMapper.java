@@ -15,7 +15,7 @@ public interface PlanoMapper {
     PlanoDTO toDto(Plano entity);
 
     // Converte lista de Entidades para lista de DTOs
-    List<PlanoDTO> toDto(List<Plano> entities);
+    List<PlanoDTO> toDtoList(List<Plano> entities);
 
     // Atualiza parcialmente uma entidade com os valores do DTO, ignorando propriedades nulas
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

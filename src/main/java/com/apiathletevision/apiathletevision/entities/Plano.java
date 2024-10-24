@@ -1,9 +1,9 @@
 package com.apiathletevision.apiathletevision.entities;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -13,7 +13,8 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "planos")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Plano {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,9 +35,6 @@ public class Plano {
             joinColumns = @JoinColumn(name = "plano_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "modalidade_id", referencedColumnName = "id"))
     private List<Modalidade> modalidades;
-
-    @OneToMany
-    private List<Pagamento> pagamentos;
 
     @ColumnDefault("true")
     private Boolean status;

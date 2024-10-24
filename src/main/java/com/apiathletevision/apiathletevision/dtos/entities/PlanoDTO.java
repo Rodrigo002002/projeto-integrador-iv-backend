@@ -21,22 +21,16 @@ public class PlanoDTO {
     private String tipo;
 
     @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class, AppGroup.Request.class})
-    private double preco;
+    private List<String> beneficios;
 
     @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class, AppGroup.Request.class})
-    private List<String> beneficios;
+    private double preco;
 
     @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class})
     private List<ModalidadeDTO> modalidades;
 
     @JsonView({AppGroup.Request.class})
     private List<Integer> modalidadesIds;
-
-    @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class})
-    private List<PagamentoDTO> pagamentos;
-
-    @JsonView({AppGroup.Request.class})
-    private List<Integer> pagamentosIds;
 
     @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class, AppGroup.Request.class})
     private Boolean status;

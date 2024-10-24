@@ -118,10 +118,5 @@ public class PlanoServiceImpl implements PlanoService {
             List<Modalidade> modalidades = modalidadeRepository.findAllById(planoDTO.getModalidadesIds());
             plano.setModalidades(modalidades);
         }
-
-        if (planoDTO.getPagamentosIds() != null) {
-            List<Pagamento> pagamentos = pagamentoRepository.findAllById(planoDTO.getPagamentosIds());
-            plano.setPagamentos(pagamentos);
-        }
     }
 }

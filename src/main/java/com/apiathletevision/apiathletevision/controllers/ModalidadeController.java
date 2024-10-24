@@ -1,6 +1,8 @@
 package com.apiathletevision.apiathletevision.controllers;
 
 import com.apiathletevision.apiathletevision.dtos.entities.ModalidadeDTO;
+import com.apiathletevision.apiathletevision.dtos.entities.PlanoDTO;
+import com.apiathletevision.apiathletevision.dtos.entities.TurmaDTO;
 import com.apiathletevision.apiathletevision.dtos.groups.AppGroup;
 import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
 import com.apiathletevision.apiathletevision.dtos.select2.Select2OptionsDTO;
@@ -96,5 +98,17 @@ public class ModalidadeController {
     public ResponseEntity<?> disable(@PathVariable("id") int id) {
         this.modalidadeService.changeStatus(id, false);
         return ResponseEntity.ok(null);
+    }
+
+    @Operation(summary = "Planos", description = "Buscar planos")
+    @GetMapping("/{id}/planos")
+    public ResponseEntity<List<PlanoDTO>> findAllPlanoByModalidadeId(@PathVariable("id") int id) throws BadRequestException {
+        return ResponseEntity.ok(modalidadeService.findAllPlanoByModalidadeId(id));
+    }
+
+    @Operation(summary = "Turmas", description = "Buscar turmas")
+    @GetMapping("/{id}/turmas")
+    public ResponseEntity<List<TurmaDTO>> findAllTurmaByModalidadeId(@PathVariable("id") int id) throws BadRequestException {
+        return ResponseEntity.ok(modalidadeService.findAllTurmaByModalidadeId(id));
     }
 }

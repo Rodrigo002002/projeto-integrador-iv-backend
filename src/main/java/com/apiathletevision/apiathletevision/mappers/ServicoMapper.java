@@ -18,7 +18,7 @@ public interface ServicoMapper {
     ServicoDTO toDto(Servico entity);
 
     // Converte lista de Entidades para lista de DTOs
-    List<ServicoDTO> toDto(List<Servico> entities);
+    List<ServicoDTO> toDtoList(List<Servico> entities);
 
     // Atualiza parcialmente uma entidade com os valores do DTO, ignorando propriedades nulas
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

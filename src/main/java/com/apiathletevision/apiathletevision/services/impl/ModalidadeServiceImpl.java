@@ -1,12 +1,20 @@
 package com.apiathletevision.apiathletevision.services.impl;
 
 import com.apiathletevision.apiathletevision.dtos.entities.ModalidadeDTO;
+import com.apiathletevision.apiathletevision.dtos.entities.PlanoDTO;
+import com.apiathletevision.apiathletevision.dtos.entities.TurmaDTO;
 import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
 import com.apiathletevision.apiathletevision.dtos.select2.Select2OptionsDTO;
 import com.apiathletevision.apiathletevision.entities.Modalidade;
+import com.apiathletevision.apiathletevision.entities.Plano;
+import com.apiathletevision.apiathletevision.entities.Turma;
 import com.apiathletevision.apiathletevision.exeptions.BadRequestException;
 import com.apiathletevision.apiathletevision.mappers.ModalidadeMapper;
+import com.apiathletevision.apiathletevision.mappers.PlanoMapper;
+import com.apiathletevision.apiathletevision.mappers.TurmaMapper;
 import com.apiathletevision.apiathletevision.repositories.ModalidadeRepository;
+import com.apiathletevision.apiathletevision.repositories.PlanoRepository;
+import com.apiathletevision.apiathletevision.repositories.TurmaRepository;
 import com.apiathletevision.apiathletevision.services.ModalidadeService;
 import com.apiathletevision.apiathletevision.services.specifications.ModalidadeSpecification;
 import io.micrometer.common.util.StringUtils;
@@ -29,6 +37,10 @@ public class ModalidadeServiceImpl implements ModalidadeService {
 
     private final ModalidadeRepository modalidadeRepository;
     private final ModalidadeMapper modalidadeMapper;
+    private final PlanoRepository planoRepository;
+    private final PlanoMapper planoMapper;
+    private final TurmaRepository turmaRepository;
+    private final TurmaMapper turmaMapper;
 
     @Override
     public PageDTO<Modalidade, ModalidadeDTO> findAll(int pageNo, int pageSize, String search, Boolean status) {
@@ -101,5 +113,23 @@ public class ModalidadeServiceImpl implements ModalidadeService {
                 .stream()
                 .map(data -> new Select2OptionsDTO(data.getId(), data.getNome()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PlanoDTO> findAllPlanoByModalidadeId(int id) {
+        List<Plano> planos = planoRepository.findAllByModalidades_id(id);
+        if (planos.isEmpty()) {
+            throw new BadRequestException("Nenhum plano encontrado");
+        }
+        return planoMapper.toDtoList(planos);
+    }
+
+    @Override
+    public List<TurmaDTO> findAllTurmaByModalidadeId(int id) {
+        List<Turma> turmas = turmaRepository.findAllByModalidade_id(id);
+        if (turmas.isEmpty()) {
+            throw new BadRequestException("Nenhuma turma encontrada");
+        }
+        return turmaMapper.toDtoList(turmas);
     }
 }

@@ -1,6 +1,6 @@
 package com.apiathletevision.apiathletevision.controllers;
 
-import com.apiathletevision.apiathletevision.dtos.entities.AlunoDTO;
+import com.apiathletevision.apiathletevision.dtos.entities.*;
 import com.apiathletevision.apiathletevision.dtos.groups.AppGroup;
 import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
 import com.apiathletevision.apiathletevision.dtos.select2.Select2OptionsDTO;
@@ -97,5 +97,38 @@ public class AlunoController {
     public ResponseEntity<?> disable(@PathVariable("id") UUID id) {
         this.alunoService.changeStatus(id, false);
         return ResponseEntity.ok(null);
+    }
+
+    @Operation(summary = "Pagamentos", description = "Buscar pagamentos")
+    @GetMapping("/{id}/pagamentos")
+    public ResponseEntity<List<PagamentoDTO>> findAllPagamentoByAlunoId(@PathVariable("id") UUID id) throws BadRequestException  {
+        return ResponseEntity.ok(alunoService.findAllPagamentoByAlunoId(id));
+    }
+
+    @Operation(summary = "Turmas", description = "Buscar turmas")
+    @GetMapping("/{id}/turmas")
+    public ResponseEntity<List<TurmaDTO>> findAllTurmaByAlunoId(@PathVariable("id") UUID id) throws BadRequestException  {
+        return ResponseEntity.ok(alunoService.findAllTurmaByAlunoId(id));
+    }
+
+    @Operation(summary = "Servicos", description = "Buscar servicos")
+    @GetMapping("/{id}/servicos")
+    public ResponseEntity<List<ServicoDTO>> findAllServicoByAlunoId(@PathVariable("id") UUID id) throws BadRequestException  {
+        return ResponseEntity.ok(alunoService.findAllServicoByAlunoId(id));
+    }
+
+    @Operation(summary = "Aulas", description = "Buscar aulas")
+    @GetMapping("/{id}/aulas")
+    public ResponseEntity<List<AulaDTO>> findAllAulaByAlunoId(@PathVariable("id") UUID id) throws BadRequestException  {
+        return ResponseEntity.ok(alunoService.findAllAulaByAlunoId(id));
+    }
+
+    @Operation(summary = "Pagamentos", description = "Buscar pagamentos por plano")
+    @GetMapping("/{id}/{planoId}/pagamentos")
+    public ResponseEntity<List<PagamentoDTO>> findAllPagamentoByAlunoIdAndPlanoId(
+            @PathVariable("id") UUID id,
+            @PathVariable("planoId") int planoId
+    ) throws BadRequestException  {
+        return ResponseEntity.ok(alunoService.findAllPagamentoByAlunoIdAndPlanoId(id, planoId));
     }
 }

@@ -15,7 +15,7 @@ public interface TurmaMapper {
     TurmaDTO toDto(Turma entity);
 
     // Converte lista de Entidades para lista de DTOs
-    List<TurmaDTO> toDto(List<Turma> entities);
+    List<TurmaDTO> toDtoList(List<Turma> entities);
 
     // Atualiza parcialmente uma entidade com os valores do DTO, ignorando propriedades nulas
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

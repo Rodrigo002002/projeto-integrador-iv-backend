@@ -32,6 +32,12 @@ public class AulaDTO {
     private List<UUID> alunosPresentesIds;
 
     @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class})
+    private ProfessorDTO professor;
+
+    @JsonView({AppGroup.Request.class})
+    private UUID professorId;
+
+    @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class})
     private TurmaDTO turma;
 
     @JsonView({AppGroup.Request.class})

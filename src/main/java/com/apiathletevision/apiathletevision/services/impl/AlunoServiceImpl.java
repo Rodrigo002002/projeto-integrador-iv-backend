@@ -1,12 +1,11 @@
 package com.apiathletevision.apiathletevision.services.impl;
 
-import com.apiathletevision.apiathletevision.dtos.entities.AlunoDTO;
+import com.apiathletevision.apiathletevision.dtos.entities.*;
 import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
 import com.apiathletevision.apiathletevision.dtos.select2.Select2OptionsDTO;
 import com.apiathletevision.apiathletevision.entities.*;
 import com.apiathletevision.apiathletevision.exeptions.BadRequestException;
-import com.apiathletevision.apiathletevision.mappers.AlunoMapper;
-import com.apiathletevision.apiathletevision.mappers.DocumentoMapper;
+import com.apiathletevision.apiathletevision.mappers.*;
 import com.apiathletevision.apiathletevision.repositories.*;
 import com.apiathletevision.apiathletevision.services.AlunoService;
 import com.apiathletevision.apiathletevision.services.specifications.AlunoSpecification;
@@ -33,12 +32,18 @@ import java.util.stream.Collectors;
 public class AlunoServiceImpl implements AlunoService {
 
     private final AlunoRepository alunoRepository;
-    private final TurmaRepository turmaRepository;
     private final DocumentoRepository documentoRepository;
     private final PlanoRepository planoRepository;
     private final AlunoMapper alunoMapper;
     private final DocumentoMapper documentoMapper;
+    private final TurmaRepository turmaRepository;
+    private final TurmaMapper turmaMapper;
+    private final AulaRepository aulaRepository;
+    private final AulaMapper aulaMapper;
+    private final PagamentoRepository pagamentoRepository;
+    private final PagamentoMapper pagamentoMapper;
     private final ServicoRepository servicoRepository;
+    private final ServicoMapper servicoMapper;
 
     @Override
     public PageDTO<Aluno, AlunoDTO> findAll(int pageNo, int pageSize, String search, Boolean status) {
@@ -124,22 +129,52 @@ public class AlunoServiceImpl implements AlunoService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<PagamentoDTO> findAllPagamentoByAlunoId(UUID id) throws BadRequestException {
+        List<Pagamento> pagamentos = pagamentoRepository.findAllByAluno_id(id);
+        if (pagamentos.isEmpty()) {
+            throw new BadRequestException("Nenhum pagamento encontrado");
+        }
+        return pagamentoMapper.toDtoList(pagamentos);
+    }
+
+    @Override
+    public List<AulaDTO> findAllAulaByAlunoId(UUID id) throws BadRequestException {
+        List<Aula> aulas = aulaRepository.findAllByAlunosPresentes_id(id);
+        if (aulas.isEmpty()) {
+            throw new BadRequestException("Nenhuma aula encontrada");
+        }
+        return aulaMapper.toDtoList(aulas);
+    }
+
+    @Override
+    public List<TurmaDTO> findAllTurmaByAlunoId(UUID id) throws BadRequestException {
+        List<Turma> turmas = turmaRepository.findAllByAlunos_id(id);
+        if (turmas.isEmpty()) {
+            throw new BadRequestException("Nenhuma turma encontrada");
+        }
+        return turmaMapper.toDtoList(turmas);
+    }
+
+    @Override
+    public List<ServicoDTO> findAllServicoByAlunoId(UUID id) throws BadRequestException {
+        List<Servico> servicos = servicoRepository.findAllByAluno_id(id);
+        if (servicos.isEmpty()) {
+            throw new BadRequestException("Nenhum serviço encontrado");
+        }
+        return servicoMapper.toDtoList(servicos);
+    }
+
+    @Override
+    public List<PagamentoDTO> findAllPagamentoByAlunoIdAndPlanoId(UUID id, int pagamentoId) {
+        List<Pagamento> pagamentos = pagamentoRepository.findAllByAluno_idAndPlano_id(id, pagamentoId);
+        if (pagamentos.isEmpty()) {
+            throw new BadRequestException("Nenhum pagamento encontrado");
+        }
+        return pagamentoMapper.toDtoList(pagamentos);
+    }
+
     private void setCreateAssociations(AlunoDTO alunoDTO, Aluno aluno) {
-        if (alunoDTO.getTurmaId() != null) {
-            Optional<Turma> turma = turmaRepository.findById(alunoDTO.getTurmaId());
-            aluno.setTurma(turma.orElse(null));
-        }
-
-        if (alunoDTO.getPlano() != null) {
-            Optional<Plano> plano = planoRepository.findById(alunoDTO.getPlanoId());
-            aluno.setPlano(plano.orElse(null));
-        }
-
-        if (!alunoDTO.getServicosIds().isEmpty()) {
-            List<Servico> servicos = servicoRepository.findAllById(alunoDTO.getServicosIds());
-            aluno.setServicos(servicos);
-        }
-
         if (!alunoDTO.getDocumentos().isEmpty()) {
             List<Documento> documentos = alunoDTO.getDocumentos()
                     .stream()
@@ -155,6 +190,11 @@ public class AlunoServiceImpl implements AlunoService {
                     ).toList();
 
             aluno.setDocumentos(documentos);
+        }
+
+        if (alunoDTO.getPlanoId() != null) {
+            Optional<Plano> plano = planoRepository.findById(alunoDTO.getPlanoId());
+            aluno.setPlano(plano.orElse(null));
         }
     }
 }

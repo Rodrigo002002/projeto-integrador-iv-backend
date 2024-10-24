@@ -1,14 +1,17 @@
 package com.apiathletevision.apiathletevision.services.impl;
 
+import com.apiathletevision.apiathletevision.dtos.entities.AlunoDTO;
 import com.apiathletevision.apiathletevision.dtos.entities.AulaDTO;
 import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
 import com.apiathletevision.apiathletevision.entities.Aluno;
 import com.apiathletevision.apiathletevision.entities.Aula;
+import com.apiathletevision.apiathletevision.entities.Professor;
 import com.apiathletevision.apiathletevision.entities.Turma;
 import com.apiathletevision.apiathletevision.exeptions.BadRequestException;
 import com.apiathletevision.apiathletevision.mappers.AulaMapper;
 import com.apiathletevision.apiathletevision.repositories.AlunoRepository;
 import com.apiathletevision.apiathletevision.repositories.AulaRepository;
+import com.apiathletevision.apiathletevision.repositories.ProfessorRepository;
 import com.apiathletevision.apiathletevision.repositories.TurmaRepository;
 import com.apiathletevision.apiathletevision.services.AulaService;
 import com.apiathletevision.apiathletevision.services.specifications.AulaSpecification;
@@ -32,6 +35,7 @@ public class AulaServiceImpl implements AulaService {
     private final AlunoRepository alunoRepository;
     private final TurmaRepository turmaRepository;
     private final AulaMapper aulaMapper;
+    private final ProfessorRepository professorRepository;
 
     public PageDTO<Aula, AulaDTO> findAll(int pageNo, int pageSize, String search, Boolean status) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("data"));
@@ -100,6 +104,11 @@ public class AulaServiceImpl implements AulaService {
         if (aulaDTO.getAlunosPresentesIds() != null && !aulaDTO.getAlunosPresentesIds().isEmpty()) {
             List<Aluno> alunosPresentes = alunoRepository.findAllById(aulaDTO.getAlunosPresentesIds());
             aula.setAlunosPresentes(alunosPresentes);
+        }
+
+        if (aulaDTO.getProfessorId() != null) {
+            Optional<Professor> professor = professorRepository.findById(aulaDTO.getProfessorId());
+            aula.setProfessor(professor.orElse(null));
         }
     }
 }

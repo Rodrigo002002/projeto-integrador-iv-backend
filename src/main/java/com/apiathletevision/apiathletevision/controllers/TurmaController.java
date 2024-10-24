@@ -1,5 +1,6 @@
 package com.apiathletevision.apiathletevision.controllers;
 
+import com.apiathletevision.apiathletevision.dtos.entities.AulaDTO;
 import com.apiathletevision.apiathletevision.dtos.entities.TurmaDTO;
 import com.apiathletevision.apiathletevision.dtos.groups.AppGroup;
 import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
@@ -13,6 +14,8 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Turmas")
 @RestController
@@ -70,5 +73,11 @@ public class TurmaController {
         turmaService.delete(id);
 
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Aulas", description = "Buscar aulas")
+    @GetMapping("/{id}/aulas")
+    public ResponseEntity<List<AulaDTO>> findAllAulaByTurmaId(@PathVariable("id") int id) throws BadRequestException {
+        return ResponseEntity.ok(turmaService.findAllAulaByTurmaId(id));
     }
 }

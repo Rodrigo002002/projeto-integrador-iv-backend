@@ -1,6 +1,8 @@
 package com.apiathletevision.apiathletevision.services;
 
 import com.apiathletevision.apiathletevision.dtos.entities.ModalidadeDTO;
+import com.apiathletevision.apiathletevision.dtos.entities.PlanoDTO;
+import com.apiathletevision.apiathletevision.dtos.entities.TurmaDTO;
 import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
 import com.apiathletevision.apiathletevision.dtos.select2.Select2OptionsDTO;
 import com.apiathletevision.apiathletevision.entities.Modalidade;
@@ -22,4 +24,8 @@ public interface ModalidadeService {
     void changeStatus(int var1, boolean var2);
 
     List<Select2OptionsDTO> findAllToSelect2(String searchTerm);
+
+    List<PlanoDTO> findAllPlanoByModalidadeId(int id) throws BadRequestException;
+
+    List<TurmaDTO> findAllTurmaByModalidadeId(int id) throws BadRequestException;
 }

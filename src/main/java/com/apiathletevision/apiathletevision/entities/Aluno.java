@@ -1,10 +1,9 @@
 package com.apiathletevision.apiathletevision.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -13,20 +12,14 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Aluno extends Usuario {
 
     @ManyToOne
-    private Turma turma;
-
-    @ManyToOne
+    @JoinColumn(name = "plano_id")
     private Plano plano;
 
     @OneToMany
-    private List<Servico> servicos;
-
-    @OneToMany
     private List<Documento> documentos;
-
-    @OneToMany
-    private List<Pagamento> pagamentos;
 }

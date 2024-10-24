@@ -1,9 +1,11 @@
 package com.apiathletevision.apiathletevision.services;
 
-import com.apiathletevision.apiathletevision.dtos.entities.AlunoDTO;
+import com.apiathletevision.apiathletevision.dtos.entities.*;
 import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
 import com.apiathletevision.apiathletevision.dtos.select2.Select2OptionsDTO;
 import com.apiathletevision.apiathletevision.entities.Aluno;
+import com.apiathletevision.apiathletevision.entities.Aula;
+import com.apiathletevision.apiathletevision.entities.Pagamento;
 import org.apache.coyote.BadRequestException;
 
 import java.util.List;
@@ -23,4 +25,14 @@ public interface AlunoService {
     void changeStatus(UUID var1, boolean var2);
 
     List<Select2OptionsDTO> findAllToSelect2(String searchTerm);
+
+    List<PagamentoDTO> findAllPagamentoByAlunoId(UUID id) throws BadRequestException;
+
+    List<AulaDTO> findAllAulaByAlunoId(UUID id) throws BadRequestException;
+
+    List<TurmaDTO> findAllTurmaByAlunoId(UUID id) throws BadRequestException;
+
+    List<ServicoDTO> findAllServicoByAlunoId(UUID id) throws BadRequestException;
+
+    List<PagamentoDTO> findAllPagamentoByAlunoIdAndPlanoId(UUID id, int planoId) throws BadRequestException;
 }

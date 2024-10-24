@@ -1,10 +1,9 @@
 package com.apiathletevision.apiathletevision.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -14,7 +13,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Table(name = "pagamentos")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Pagamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,13 +27,14 @@ public class Pagamento {
     @Column(name = "data_prazo")
     private LocalDate dataPrazo;
 
-    @Column(name = "valor")
     private Double valor;
 
     @ManyToOne
+    @JoinColumn(name = "plano_id")
     private Plano plano;
 
     @ManyToOne
+    @JoinColumn(name = "servico_id")
     private Servico servico;
 
     @OneToOne

@@ -1,7 +1,9 @@
 package com.apiathletevision.apiathletevision.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -10,6 +12,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Turma {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,15 +21,14 @@ public class Turma {
     private Integer id;
 
     @ManyToOne
+    @JoinColumn(name = "modalidade_id")
     private Modalidade modalidade;
-
-    @OneToMany
-    private List<Aula> aulas;
 
     @OneToMany
     private List<Aluno> alunos;
 
     @ManyToOne
+    @JoinColumn(name = "professor_id")
     private Professor professor;
 
     private String periodo;

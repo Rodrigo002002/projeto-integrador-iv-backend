@@ -1,6 +1,9 @@
 package com.apiathletevision.apiathletevision.controllers;
 
+import com.apiathletevision.apiathletevision.dtos.entities.AulaDTO;
 import com.apiathletevision.apiathletevision.dtos.entities.ProfessorDTO;
+import com.apiathletevision.apiathletevision.dtos.entities.ServicoDTO;
+import com.apiathletevision.apiathletevision.dtos.entities.TurmaDTO;
 import com.apiathletevision.apiathletevision.dtos.groups.AppGroup;
 import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
 import com.apiathletevision.apiathletevision.dtos.select2.Select2OptionsDTO;
@@ -97,5 +100,23 @@ public class ProfessorController {
     public ResponseEntity<?> disable(@PathVariable("id") UUID id) {
         this.professorService.changeStatus(id, false);
         return ResponseEntity.ok(null);
+    }
+
+    @Operation(summary = "Servicos", description = "Buscar servicos")
+    @GetMapping("/{id}/servicos")
+    public ResponseEntity<List<ServicoDTO>> findAllServicoByProfessorID(@PathVariable("id") UUID id) throws BadRequestException {
+        return ResponseEntity.ok(professorService.findAllServicoByProfessorID(id));
+    }
+
+    @Operation(summary = "Turmas", description = "Buscar turmas")
+    @GetMapping("/{id}/turmas")
+    public ResponseEntity<List<TurmaDTO>> findAllTurmaByProfessorID(@PathVariable("id") UUID id) throws BadRequestException {
+        return ResponseEntity.ok(professorService.findAllTurmaByProfessorID(id));
+    }
+
+    @Operation(summary = "Aulas", description = "Buscar aulas")
+    @GetMapping("/{id}/aulas")
+    public ResponseEntity<List<AulaDTO>> findAllAulaByProfessorID(@PathVariable("id") UUID id) throws BadRequestException {
+        return ResponseEntity.ok(professorService.findAllAulaByProfessorID(id));
     }
 }

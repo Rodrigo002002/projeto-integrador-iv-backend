@@ -1,18 +1,15 @@
 package com.apiathletevision.apiathletevision.services.impl;
 
+import com.apiathletevision.apiathletevision.dtos.entities.AulaDTO;
 import com.apiathletevision.apiathletevision.dtos.entities.ProfessorDTO;
+import com.apiathletevision.apiathletevision.dtos.entities.ServicoDTO;
+import com.apiathletevision.apiathletevision.dtos.entities.TurmaDTO;
 import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
 import com.apiathletevision.apiathletevision.dtos.select2.Select2OptionsDTO;
-import com.apiathletevision.apiathletevision.entities.Documento;
-import com.apiathletevision.apiathletevision.entities.Professor;
-import com.apiathletevision.apiathletevision.entities.Servico;
+import com.apiathletevision.apiathletevision.entities.*;
 import com.apiathletevision.apiathletevision.exeptions.BadRequestException;
-import com.apiathletevision.apiathletevision.mappers.DocumentoMapper;
-import com.apiathletevision.apiathletevision.mappers.ProfessorMapper;
-import com.apiathletevision.apiathletevision.mappers.ServicoMapper;
-import com.apiathletevision.apiathletevision.repositories.DocumentoRepository;
-import com.apiathletevision.apiathletevision.repositories.ProfessorRepository;
-import com.apiathletevision.apiathletevision.repositories.ServicoRepository;
+import com.apiathletevision.apiathletevision.mappers.*;
+import com.apiathletevision.apiathletevision.repositories.*;
 import com.apiathletevision.apiathletevision.services.ProfessorService;
 import com.apiathletevision.apiathletevision.services.specifications.ProfessorSpecification;
 import io.micrometer.common.util.StringUtils;
@@ -41,6 +38,10 @@ public class ProfessorServiceImpl implements ProfessorService {
     private final DocumentoMapper documentoMapper;
     private final ServicoRepository servicoRepository;
     private final ServicoMapper servicoMapper;
+    private final TurmaRepository turmaRepository;
+    private final TurmaMapper turmaMapper;
+    private final AulaRepository aulaRepository;
+    private final AulaMapper aulaMapper;
 
     @Override
     public PageDTO<Professor, ProfessorDTO> findAll(int pageNo, int pageSize, String search, Boolean status) {
@@ -127,12 +128,34 @@ public class ProfessorServiceImpl implements ProfessorService {
                 .collect(Collectors.toList());
     }
 
-    private void setCreateAssociations(ProfessorDTO professorDTO, Professor professor) {
-        if (!professorDTO.getServicosIds().isEmpty()) {
-            List<Servico> servicos = servicoRepository.findAllById(professorDTO.getServicosIds());
-            professor.setServicos(servicos);
+    @Override
+    public List<ServicoDTO> findAllServicoByProfessorID(UUID id) {
+        List<Servico> servicos = servicoRepository.findAllByProfessor_id(id);
+        if (servicos.isEmpty()) {
+            throw  new BadRequestException("Nenhum servico encontrado");
         }
+        return servicoMapper.toDtoList(servicos);
+    }
 
+    @Override
+    public List<TurmaDTO> findAllTurmaByProfessorID(UUID id) {
+        List<Turma> turmas = turmaRepository.findAllByProfessor_id(id);
+        if (turmas.isEmpty()) {
+            throw  new BadRequestException("Nenhuma turma encontrada");
+        }
+        return turmaMapper.toDtoList(turmas);
+    }
+
+    @Override
+    public List<AulaDTO> findAllAulaByProfessorID(UUID id) {
+        List<Aula> aulas = aulaRepository.findAllByProfessor_id(id);
+        if (aulas.isEmpty()) {
+            throw  new BadRequestException("Nenhuma aula encontrada");
+        }
+        return aulaMapper.toDtoList(aulas);
+    }
+
+    private void setCreateAssociations(ProfessorDTO professorDTO, Professor professor) {
         if (!professorDTO.getDocumentos().isEmpty()) {
             List<Documento> documentos = professorDTO.getDocumentos()
                     .stream()

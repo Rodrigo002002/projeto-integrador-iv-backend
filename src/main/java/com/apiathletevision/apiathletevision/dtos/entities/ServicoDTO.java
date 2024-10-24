@@ -32,12 +32,6 @@ public class ServicoDTO {
     private LocalDate data;
 
     @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class})
-    private List<PagamentoDTO> pagamentos;
-
-    @JsonView({AppGroup.Request.class})
-    private List<Integer> pagamentoIds;
-
-    @JsonView({AppGroup.Response.class, AppGroup.ResponsePage.class})
     private ProfessorDTO professor;
 
     @JsonView({AppGroup.Request.class})

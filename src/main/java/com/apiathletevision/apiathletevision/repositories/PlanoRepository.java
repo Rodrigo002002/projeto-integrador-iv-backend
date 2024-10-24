@@ -11,5 +11,7 @@ import java.util.List;
 public interface PlanoRepository extends JpaRepository<Plano, Integer>, JpaSpecificationExecutor<Plano> {
     List<Plano> findAllByStatusIsTrue();
 
+    List<Plano> findAllByModalidades_id(Integer modalidadeId);
+
     List<Plano> findByStatusIsTrueAndNomeContainingIgnoreCaseOrderByNome(String nome);
 }

@@ -1,9 +1,12 @@
 package com.apiathletevision.apiathletevision.services.impl;
 
+import com.apiathletevision.apiathletevision.dtos.entities.AlunoDTO;
+import com.apiathletevision.apiathletevision.dtos.entities.AulaDTO;
 import com.apiathletevision.apiathletevision.dtos.entities.TurmaDTO;
 import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
 import com.apiathletevision.apiathletevision.entities.*;
 import com.apiathletevision.apiathletevision.exeptions.BadRequestException;
+import com.apiathletevision.apiathletevision.mappers.AulaMapper;
 import com.apiathletevision.apiathletevision.mappers.TurmaMapper;
 import com.apiathletevision.apiathletevision.repositories.*;
 import com.apiathletevision.apiathletevision.services.TurmaService;
@@ -28,6 +31,7 @@ public class TurmaServiceImpl implements TurmaService {
     private final TurmaMapper turmaMapper;
     private final AlunoRepository alunoRepository;
     private final AulaRepository aulaRepository;
+    private final AulaMapper aulaMapper;
     private final ModalidadeRepository modalidadeRepository;
     private final ProfessorRepository professorRepository;
 
@@ -76,15 +80,19 @@ public class TurmaServiceImpl implements TurmaService {
                 new BadRequestException("Turma com o ID: " + id + " não encontrada"));
     }
 
+    @Override
+    public List<AulaDTO> findAllAulaByTurmaId(int id) {
+        List<Aula> aulas = aulaRepository.findAllByTurma_id(id);
+        if (aulas.isEmpty()) {
+            throw new BadRequestException("Nenhuma aula encontrada");
+        }
+        return aulaMapper.toDtoList(aulas);
+    }
+
     private void setAssociations(TurmaDTO turmaDTO, Turma turma) {
         if (turmaDTO.getModalidadeId() != null) {
             Optional<Modalidade> modalidade = modalidadeRepository.findById(turmaDTO.getModalidadeId());
             turma.setModalidade(modalidade.orElse(null));
-        }
-
-        if (turmaDTO.getAulasIds() != null && !turmaDTO.getAulasIds().isEmpty()) {
-            List<Aula> aulas = aulaRepository.findAllById(turmaDTO.getAulasIds());
-            turma.setAulas(aulas);
         }
 
         if (turmaDTO.getAlunosIds() != null && !turmaDTO.getAlunosIds().isEmpty()) {
