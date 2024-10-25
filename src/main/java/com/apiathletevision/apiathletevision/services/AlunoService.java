@@ -4,8 +4,6 @@ import com.apiathletevision.apiathletevision.dtos.entities.*;
 import com.apiathletevision.apiathletevision.dtos.response.PageDTO;
 import com.apiathletevision.apiathletevision.dtos.select2.Select2OptionsDTO;
 import com.apiathletevision.apiathletevision.entities.Aluno;
-import com.apiathletevision.apiathletevision.entities.Aula;
-import com.apiathletevision.apiathletevision.entities.Pagamento;
 import org.apache.coyote.BadRequestException;
 
 import java.util.List;

@@ -37,7 +37,8 @@ public class Pagamento {
     @JoinColumn(name = "servico_id")
     private Servico servico;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "aluno_id")
     private Aluno aluno;
 
     private Boolean pago;

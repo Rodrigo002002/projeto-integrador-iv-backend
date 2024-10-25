@@ -4,6 +4,7 @@ package com.apiathletevision.apiathletevision.services.impl;
 import com.apiathletevision.apiathletevision.dtos.entities.UsuarioDTO;
 import com.apiathletevision.apiathletevision.dtos.jwt.JwtDTO;
 import com.apiathletevision.apiathletevision.dtos.request.LoginRequestDTO;
+import com.apiathletevision.apiathletevision.dtos.response.AuthenticatedUserDTO;
 import com.apiathletevision.apiathletevision.entities.Usuario;
 import com.apiathletevision.apiathletevision.exeptions.AuthenticationException;
 import com.apiathletevision.apiathletevision.exeptions.BadRequestException;
@@ -46,9 +47,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Value("${api.security.token.refreshTokenExpiration}")
     private Integer timeExpirationRefreshToken;
 
-
     private final UsuarioRepository usuarioRepository;
-
     private final UsuarioMapper usuarioMapper;
 
     @Getter
@@ -56,33 +55,46 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Getter
     private Usuario currentUser = null;
 
+    // Implementação de loadUserByUsername
     @Override
     public Usuario loadUserByUsername(String login) throws AuthenticationException {
         Usuario usuario = usuarioRepository.findByLogin(login);
-
         if (usuario == null) {
             throw new AuthenticationException("Usuário inexistente ou senha inválida");
         }
-
         return usuario;
+    }
+
+    // Implementação de getAuthenticatedUserDTO
+    @Override
+    public AuthenticatedUserDTO getCurrentUserDTO() {
+        loadAuthenticatedUser();
+        // Converte Usuario para AuthenticatedUserDTO
+        if (currentUser != null) {
+            return new AuthenticatedUserDTO(
+                    currentUser.getId(),
+                    currentUser.getLogin(),
+                    currentUser.getEmail(),
+                    currentUser.getRole().getRole()
+            );
+        }
+        return null; // Retorna null ou lança uma exceção dependendo da sua lógica
     }
 
     @Override
     @Transactional
     public UsuarioDTO getAuthenticatedUser() {
         loadAuthenticatedUser();
-
         if (currentUserDTO == null) {
             throw new BadCredentialsException("Token inválido");
         }
-
         return currentUserDTO;
     }
 
+    // Implementação de loadAuthenticatedUser
     @Override
     public void loadAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new BadCredentialsException("Usuário não autenticado");
         }
@@ -92,38 +104,32 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         if (optionalUsuario.isPresent()) {
             currentUser = optionalUsuario.get();
-            currentUserDTO = compileByEntity(currentUser);
+            currentUserDTO = compileByEntity(currentUser); // Aqui você está convertendo para UsuarioDTO
         }
     }
 
     private UsuarioDTO compileByEntity(Usuario usuario) {
-
         return usuarioMapper.toDto(usuario);
     }
 
     @Override
     public JwtDTO getAccessToken(LoginRequestDTO loginRequestDTO) {
         Usuario usuario = usuarioRepository.findByLogin(loginRequestDTO.getLogin());
-
         if (usuario == null) {
             throw new BadRequestException("Usuário não encontrado!");
         }
 
         UsuarioDTO usuarioDTO = usuarioMapper.toDto(usuario);
-
-        return JwtDTO
-                .builder()
+        return JwtDTO.builder()
                 .accessToken(generateTokenJwt(usuario, timeExpirationToken))
                 .refreshToken(generateTokenJwt(usuario, timeExpirationRefreshToken))
                 .usuario(usuarioDTO)
                 .build();
     }
 
-
     public String generateTokenJwt(Usuario usuario, Integer expiration) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
-
             return JWT.create()
                     .withIssuer(ISSUER)
                     .withSubject(usuario.getLogin())
@@ -143,7 +149,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .verify(token)
                     .getSubject();
         } catch (JWTVerificationException exception) {
-            // Você pode registrar a exceção se desejar
             log.info("Token inválido: {}", exception.getMessage());
             return null; // ou lance uma exceção
         }
@@ -151,28 +156,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public JwtDTO getRefreshToken(String refreshToken) {
-
         String login = validateToken(refreshToken);
         Usuario usuario = usuarioRepository.findByLogin(login);
-
         if (usuario == null) {
             throw new BadRequestException("Usuário não encontrado!");
         }
 
-        // Converte o usuário para UsuarioDTO
         UsuarioDTO usuarioDTO = usuarioMapper.toDto(usuario);
 
         var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return JwtDTO
-                .builder()
+        return JwtDTO.builder()
                 .accessToken(generateTokenJwt(usuario, timeExpirationToken))
                 .refreshToken(generateTokenJwt(usuario, timeExpirationRefreshToken))
-                .usuario(usuarioDTO)  // Inclui o usuarioDTO no retorno
+                .usuario(usuarioDTO)
                 .build();
     }
-
 
     private Instant generateExpirationDate(Integer expiration) {
         return LocalDateTime.now()

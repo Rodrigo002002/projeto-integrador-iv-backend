@@ -4,7 +4,6 @@ import com.apiathletevision.apiathletevision.components.filters.SecurityFilter;
 import com.apiathletevision.apiathletevision.exeptions.handlers.CustomAuthenticationEntryPoint;
 import com.apiathletevision.apiathletevision.helpers.PublicRoutes;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -33,7 +32,8 @@ public class SecurityConfigurations {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(PublicRoutes.PUBLIC_URLS).permitAll() // Rotas públicas definidas
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(PublicRoutes.PUBLIC_URLS).permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/gestor/**").hasRole("GESTOR")
                         .requestMatchers(HttpMethod.GET, "/api/gestor/**").hasRole("GESTOR")
                         .requestMatchers(HttpMethod.PUT, "/api/gestor/**").hasRole("GESTOR")

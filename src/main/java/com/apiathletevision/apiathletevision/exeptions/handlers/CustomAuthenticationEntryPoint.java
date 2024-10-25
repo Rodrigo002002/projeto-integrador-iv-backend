@@ -24,7 +24,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("error", "Usuário sem permissão");
-        
+
         ObjectMapper mapper = new ObjectMapper();
         String jsonResponse = mapper.writeValueAsString(errorResponse);
 

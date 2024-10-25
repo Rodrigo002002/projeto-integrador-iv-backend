@@ -175,6 +175,7 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     private void setCreateAssociations(AlunoDTO alunoDTO, Aluno aluno) {
+
         if (!alunoDTO.getDocumentos().isEmpty()) {
             List<Documento> documentos = alunoDTO.getDocumentos()
                     .stream()

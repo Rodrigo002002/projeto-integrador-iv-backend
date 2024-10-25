@@ -25,7 +25,7 @@ public class Usuario implements UserDetails {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "login", unique = true, nullable = false)
     private String login;
 
     @Column(name = "nome", nullable = false)
